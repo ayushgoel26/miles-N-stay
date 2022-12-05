@@ -15,7 +15,6 @@ function SignUpModal(props) {
       middle_name: "",
       last_name: "",
     },
-    url: "",
     gender: "",
     contact: {
       email: "",
@@ -101,14 +100,14 @@ function SignUpModal(props) {
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
             <Row>
-              <Col md="2">
+              <Col sm="3" md="2">
                 <Form.Select
                   onChange={(e) =>
                     setFormData({
                       ...formData,
                       name: {
                         ...formData.name,
-                        middle_name: e.target.value,
+                        suffix: e.target.value,
                       },
                     })
                   }
@@ -201,7 +200,7 @@ function SignUpModal(props) {
                   Please enter Street Address
                 </Form.Text>
               </Col>
-              <Col md="3">
+              <Col md="3" sm="4">
                 <Form.Control
                   type="number"
                   placeholder="Unit No"
@@ -223,7 +222,13 @@ function SignUpModal(props) {
                   id="country"
                   onFocus={(e) => on_focus_error(e)}
                   onChange={(e) => {
-                    setCountry(e.target.value);
+                    setFormData({
+                      ...formData,
+                      address: {
+                        ...formData.address,
+                        country: e.target.value,
+                      },
+                    });
                     document
                       .getElementById("state")
                       .removeAttribute("disabled");
@@ -245,17 +250,25 @@ function SignUpModal(props) {
                   id="state"
                   onFocus={(e) => on_focus_error(e)}
                   onChange={(e) => {
-                    setState(e.target.value);
+                    setFormData({
+                      ...formData,
+                      address: {
+                        ...formData.address,
+                        state: e.target.value,
+                      },
+                    });
                     document.getElementById("city").removeAttribute("disabled");
                   }}
                   disabled
                 >
                   <option value={""}>State *</option>
-                  {State.getStatesOfCountry(country).map((state) => (
-                    <option value={state.isoCode} key={state.isoCode}>
-                      {state.name}
-                    </option>
-                  ))}
+                  {State.getStatesOfCountry(formData.address.country).map(
+                    (state) => (
+                      <option value={state.isoCode} key={state.isoCode}>
+                        {state.name}
+                      </option>
+                    )
+                  )}
                 </Form.Select>
                 <Form.Text className="error" id="state_error">
                   Please select state
@@ -266,12 +279,21 @@ function SignUpModal(props) {
                   id="city"
                   onFocus={(e) => on_focus_error(e)}
                   onChange={(e) => {
-                    setCity(e.target.value);
+                    setFormData({
+                      ...formData,
+                      address: {
+                        ...formData.address,
+                        city: e.target.value,
+                      },
+                    });
                   }}
                   disabled
                 >
                   <option value={""}>City *</option>
-                  {City.getCitiesOfState(country, state).map((city) => (
+                  {City.getCitiesOfState(
+                    formData.address.country,
+                    formData.address.state
+                  ).map((city) => (
                     <option value={city.isoCode} key={city.isoCode}>
                       {city.name}
                     </option>
@@ -288,7 +310,15 @@ function SignUpModal(props) {
                   placeholder="Zip Code *"
                   pattern="\d{5,5}(-\d{4,4})?"
                   onFocus={(e) => on_focus_error(e)}
-                  onChange={(e) => setZipCode(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      address: {
+                        ...formData.address,
+                        zip: e.target.value,
+                      },
+                    })
+                  }
                 />
                 <Form.Text className="error" id="zip_error">
                   Please enter Zip Code
@@ -304,7 +334,15 @@ function SignUpModal(props) {
                   id="email"
                   placeholder="Email ID *"
                   onFocus={(e) => on_focus_error(e)}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      contact: {
+                        ...formData.contact,
+                        email: e.target.value,
+                      },
+                    })
+                  }
                 />
                 <Form.Text className="error" id="email_error">
                   Please enter Email
@@ -319,7 +357,15 @@ function SignUpModal(props) {
                   placeholder="Phone Number *"
                   pattern="[0-9]{10}"
                   onFocus={(e) => on_focus_error(e)}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      contact: {
+                        ...formData.contact,
+                        phone: e.target.value,
+                      },
+                    })
+                  }
                 />
                 <Form.Text className="error" id="phone_number_error">
                   Please enter Phone Number
@@ -332,7 +378,15 @@ function SignUpModal(props) {
                   type="tel"
                   placeholder="Emergency Contact"
                   pattern="[0-9]{10}"
-                  onChange={(e) => setEmergencyContact(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      contact: {
+                        ...formData.contact,
+                        emergency: e.target.value,
+                      },
+                    })
+                  }
                 />
               </Form.Group>
             </Col>
@@ -345,7 +399,12 @@ function SignUpModal(props) {
                   id="username"
                   placeholder="Username *"
                   onFocus={(e) => on_focus_error(e)}
-                  onChange={(e) => setUserName(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      username: e.target.value,
+                    })
+                  }
                 />
                 <Form.Text className="error" id="username_error">
                   Please enter Username
@@ -359,7 +418,12 @@ function SignUpModal(props) {
                   id="password"
                   placeholder="Password *"
                   onFocus={(e) => on_focus_error(e)}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      password: e.target.value,
+                    })
+                  }
                 />
                 <Form.Text className="error" id="password_error">
                   Please enter Password
@@ -382,8 +446,15 @@ function SignUpModal(props) {
             </Col>
           </Row>
           <Row>
-            <Col md="3">
-              <Form.Select onChange={(e) => setGender(e.target.value)}>
+            <Col md="3" sm="4">
+              <Form.Select
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    gender: e.target.value,
+                  })
+                }
+              >
                 <option value={""}>Gender</option>
                 <option value={"Male"}>Male</option>
                 <option value={"Female"}>Female</option>
@@ -395,7 +466,12 @@ function SignUpModal(props) {
                 <Form.Control
                   type="file"
                   placeholder="Government ID"
-                  onChange={(e) => setGovernmentID(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      govt_id: e.target.value,
+                    })
+                  }
                 />
                 <Form.Text className="text-muted">
                   Upload Government ID
