@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Modal, Form, Row, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { Country, State, City } from "country-state-city";
 import "./signUpModal.css";
+import axios from "axios";
 
 function SignUpModal(props) {
   var errorFlag;
@@ -21,7 +22,6 @@ function SignUpModal(props) {
       phone: "",
       emergency: "",
     },
-    govt_id: "",
     address: {
       street: "",
       unit_no: "",
@@ -32,6 +32,7 @@ function SignUpModal(props) {
     },
   });
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [govID, setGovID] = useState("");
 
   const validate_field = (field, field_name) => {
     if (field == "") {
@@ -74,15 +75,18 @@ function SignUpModal(props) {
     }
   };
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
     validate_form();
+    const Data = new FormData();
+    Data.append("file", govID);
+    Data.append("data", JSON.stringify(formData));
     if (!errorFlag) {
       const requestOptions = {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: Data,
       };
+
       fetch("http://localhost:3000/users/signup", requestOptions)
         .then((response) => response.json())
         .then((data) => console.log(data));
@@ -466,12 +470,7 @@ function SignUpModal(props) {
                 <Form.Control
                   type="file"
                   placeholder="Government ID"
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      govt_id: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setGovID(e.target.files[0])}
                 />
                 <Form.Text className="text-muted">
                   Upload Government ID
