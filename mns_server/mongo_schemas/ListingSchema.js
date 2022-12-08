@@ -11,7 +11,7 @@ const ListingSchema = new Schema({
     },
     "property_type": { 
         type: String,
-        enum: ['Apartment', 'Villa', 'Treehouse', 'Townhouse', 'Condominium', 'Lakefront', 'Countryside', 'Mansions', 'Castle', 'Ski Resort', 'Cave', 'Dome', 'Luxury', 'Boat'], 
+        enum: ['Apartment', 'Villa', 'Treehouse', 'Townhouse', 'Condominium', 'Lakefront', 'Countryside', 'Mansion', 'Castle', 'Ski Resort', 'Cave', 'Dome', 'Luxury', 'Boat'], 
         required: true
     },
     "description": { 

@@ -1,13 +1,14 @@
+import { Card } from "react-bootstrap";
+
 function PropertyCard(props) {
-    console.log(props.info)
     return (
-        <div class="col-md-3 my-1 py-1 mx-1 px-1 card">
-            <img src={props.info.images[0].image_url} class="card-img-top" alt="..." />
-            <div class="card-body">
-                <h5 class="card-title">{props.info.property_name}</h5>
-                <p class="card-text">{props.info.property_type}</p>
-            </div>
-        </div>
+        <Card className='col-md-3 my-1 py-1 mx-1 px-1'>
+            <Card.Img variant="top" src={props.info.images[0].image_url} />
+            <Card.Body>
+                <Card.Title>{props.info.property_name}</Card.Title>
+                <Card.Text>{props.info.property_type}</Card.Text>
+            </Card.Body>
+        </Card>
     );
 }
 
