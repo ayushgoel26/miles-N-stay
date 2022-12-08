@@ -3,11 +3,11 @@ import { Modal, Form, Row, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { Country, State, City } from "country-state-city";
 import "./signUpModal.css";
-import axios from "axios";
+import md5 from "md5";
 
 function SignUpModal(props) {
   var errorFlag;
-  const [formData, setFormData] = useState({
+  var formDataInitialState = {
     username: "",
     password: "",
     name: {
@@ -30,12 +30,14 @@ function SignUpModal(props) {
       zip: "",
       country: "",
     },
-  });
+  };
+  const [formData, setFormData] = useState(formDataInitialState);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [govID, setGovID] = useState("");
+  const [usernameFlag, setUsernameFlag] = useState(true);
 
   const validate_field = (field, field_name) => {
-    if (field == "") {
+    if (field === "") {
       errorFlag = true;
       document.getElementById(field_name + "_error").style.display = "inline";
       document.getElementById(field_name).style.border = "2px solid red";
@@ -45,6 +47,21 @@ function SignUpModal(props) {
   const on_focus_error = (e) => {
     document.getElementById(e.target.id + "_error").style.display = "none";
     document.getElementById(e.target.id).style.border = "1px solid #ced4da";
+  };
+
+  const checkUsername = (e) => {
+    console.log("in check user name", formData.username);
+    fetch("http://localhost:3000/users/" + formData.username)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data === "exists") {
+          setUsernameFlag(false);
+          document.getElementById("username_exists").style.display = "inline";
+          document.getElementById("username").style.border = "2px solid red";
+        } else {
+          setUsernameFlag(true);
+        }
+      });
   };
 
   const validate_form = () => {
@@ -62,9 +79,9 @@ function SignUpModal(props) {
     validate_field(formData.password, "password");
     validate_field(confirmPassword, "confirm_password");
     if (
-      formData.password != "" &&
-      confirmPassword != "" &&
-      confirmPassword != formData.password
+      formData.password !== "" &&
+      confirmPassword !== "" &&
+      confirmPassword !== formData.password
     ) {
       errorFlag = true;
       var error = document.getElementById("confirm_password_error");
@@ -73,15 +90,16 @@ function SignUpModal(props) {
       document.getElementById("confirm_password").style.border =
         "2px solid red";
     }
+    validate_field(formData.gender, "gender");
   };
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    validate_form();
+    // validate_form();
     const Data = new FormData();
     Data.append("file", govID);
     Data.append("data", JSON.stringify(formData));
-    if (!errorFlag) {
+    if (!errorFlag && usernameFlag) {
       const requestOptions = {
         method: "POST",
         body: Data,
@@ -90,6 +108,9 @@ function SignUpModal(props) {
       fetch("http://localhost:3000/users/signup", requestOptions)
         .then((response) => response.json())
         .then((data) => console.log(data));
+      setFormData(formDataInitialState);
+      setConfirmPassword("");
+      setGovID("");
       props.closeModal();
     }
   };
@@ -402,7 +423,12 @@ function SignUpModal(props) {
                   type="text"
                   id="username"
                   placeholder="Username *"
-                  onFocus={(e) => on_focus_error(e)}
+                  onFocus={(e) => {
+                    on_focus_error(e);
+                    document.getElementById("username_exists").style.display =
+                      "none";
+                  }}
+                  onBlur={(e) => checkUsername(e.target.value)}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
@@ -412,6 +438,9 @@ function SignUpModal(props) {
                 />
                 <Form.Text className="error" id="username_error">
                   Please enter Username
+                </Form.Text>
+                <Form.Text className="error" id="username_exists">
+                  Please enter another Username. This username is being used
                 </Form.Text>
               </Form.Group>
             </Col>
@@ -425,7 +454,7 @@ function SignUpModal(props) {
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      password: e.target.value,
+                      password: md5(e.target.value),
                     })
                   }
                 />
@@ -441,7 +470,7 @@ function SignUpModal(props) {
                   id="confirm_password"
                   placeholder="Confirm Password *"
                   onFocus={(e) => on_focus_error(e)}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => setConfirmPassword(md5(e.target.value))}
                 />
                 <Form.Text className="error" id="confirm_password_error">
                   Please confirm password
@@ -452,6 +481,8 @@ function SignUpModal(props) {
           <Row>
             <Col md="3" sm="4">
               <Form.Select
+                id="gender"
+                onFocus={(e) => on_focus_error(e)}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -463,7 +494,13 @@ function SignUpModal(props) {
                 <option value={"Male"}>Male</option>
                 <option value={"Female"}>Female</option>
                 <option value={"Others"}>Others</option>
+                <option value={"Do not wish to Disclose"}>
+                  Do not wish to Disclose
+                </option>
               </Form.Select>
+              <Form.Text className="error" id="gender_error">
+                Please enter gender
+              </Form.Text>
             </Col>
             <Col>
               <Form.Group className="mb-3">
