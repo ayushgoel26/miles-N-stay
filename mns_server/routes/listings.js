@@ -12,24 +12,6 @@ mongoose.connect(mongoDB).then((dbo) => {
 	console.error(err)
 });
 
-router.get('/', function (req, res) {
-	const Listings = mongoose.model("properties", ListingSchema);
-	var city = decodeURI(req.query.city) || ''
-	var type = req.query.type || ''
-	console.log(city)
-		Listings.find({
-			"property_type": { "$regex": type, "$options": "i" },
-			"property_address.city": { "$regex": city, "$options": "i" },
-		}, (err, listings) => {
-			if (err) {
-				console.log (err);
-				return
-			}
-			res.json(listings);
-		});
-});
-
-
 
 router.post('/', (req, res) => {
     console.log("inside post endpoint")
@@ -43,6 +25,56 @@ router.post('/', (req, res) => {
             
 			res.send(listings)
 		});
+});
+
+
+mongoose.connect(mongoDB).then(
+  (dbo) => {
+    console.log("DB connected");
+  },
+  (err) => {
+    console.log("Unable to connect to DB");
+    console.error(err);
+  }
+);
+
+router.get("/", function (req, res) {
+  console.log(req.query);
+  const Listings = mongoose.model("properties", ListingSchema);
+  if (city === undefined) {
+    var city = "";
+  } else {
+    var city = decodeURI(req.query.city);
+  }
+  if (type === undefined) {
+    var type = "";
+  } else {
+    var type = req.query.type;
+  }
+  if (endDate === undefined) {
+    var endDate = "";
+  } else {
+    var endDate = req.query.endDate;
+  }
+  if (startDate === undefined) {
+    var startDate = "";
+  } else {
+    var startDate = req.query.startDate;
+  }
+  Listings.find(
+    {
+      property_type: { $regex: type, $options: "i" },
+      "property_address.city": { $regex: city, $options: "i" },
+    },
+    (err, listings) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(listings);
+      }
+      return;
+    }
+  );
 });
 
 module.exports = router;

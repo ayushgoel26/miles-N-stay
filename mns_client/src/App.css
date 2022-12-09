@@ -278,3 +278,41 @@ input:focus {
   display: inline-block;
   vertical-align: middle;
 }
+#welcome-div {
+	background: url(../public/img/home.jpg) no-repeat center fixed;
+	height: 100vh;
+	background-size: cover;
+  background-position: center;
+	/* margin-bottom: 0; */
+	/* border-radius: 0; */
+  margin: 0;
+  padding: 0;
+  background-attachment: fixed;
+}
+
+#search-card {
+	margin: 0 auto;
+	float: none;
+	margin-bottom: 0px;
+	top: 35%;
+	opacity: .8;
+	width: 80%;
+	padding: 10px;
+}
+
+#card-search {
+	background-color: #f58b5d;
+	width: 100%;
+	color: #fff;
+}
+
+#card-search:hover {
+	color: #000;
+}
+
+@media (min-width: 768px) {
+	#search-card {
+		width: 30%;
+		top: 35%;
+	}
+}
