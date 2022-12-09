@@ -1,34 +1,35 @@
-import React from 'react'
+import React from 'react';
+import Dropzone from 'react-dropzone-uploader'
+import 'react-dropzone-uploader/dist/styles.css'
 
 
 
 function PropertyImage({formData,setFormData}) {
 
-  const handleChange = (event) => {
-    const {name,value} =event.target;
-    console.log("inside handlechange")
-    setFormData(prevFormData => ({
-        ...prevFormData,
-        images: {
-            ...prevFormData.images,
-            [name]:value
-        }
-  
-    }))
+  const getUploadParams = () => {
+    return { url: 'https://httpbin.org/post' }
   }
-  
+
+  const handleChangeStatus = ({ meta }, status) => {
+    console.log(status, meta)
+  }
+
+  const handleSubmit = (files, allFiles) => {
+    console.log(files.map(f => f.meta))
+    allFiles.forEach(f => f.remove())
+  }
+
   return (
-    <div class="image-upload-container">
-            <div class="form-group">
-                <label for="image_name">Image Name</label>
-                <input type="text" class="form-control form-control-sm" id="image_name" name="image_name" placeholder="Enter Image Name.." value={formData.images.image_name} onChange={handleChange}/>
-            </div>
-            <div class="form-group">
-                <label for="proprty_name">Image URL</label>
-                <input type="text" class="form-control form-control-sm" id="image_url" name="image_url" placeholder="Enter Image URL.." value={formData.images.image_url} onChange={handleChange}/>
-            </div>
-    </div>
+    <Dropzone
+      getUploadParams={getUploadParams}
+      onChangeStatus={handleChangeStatus}
+      onSubmit={handleSubmit}
+      styles={{ dropzone: { minHeight: 200, maxHeight: 250 } }}
+    />
   )
+
 }
+
+
 
 export default PropertyImage
