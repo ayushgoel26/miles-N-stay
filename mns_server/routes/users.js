@@ -38,12 +38,21 @@ router.post("/signup", upload.single("file"), async function (req, res) {
   });
 });
 
-router.get("/:username", function (req, res) {
+router.get("/:type/:value", function (req, res) {
   const user = mongoose.model("user", UserSchema);
+  key = req.params.type
+  let mongo_find_query = {}
+  if (key === 'username') {
+    mongo_find_query = { username : req.params.value }
+  } else if (key === 'email') {
+    mongo_find_query = { email : req.params.value }
+  } else {
+    if (key === 'phone') {
+      mongo_find_query = { phone : req.params.value }
+    }
+  }
   user.find(
-    {
-      username: req.params.username,
-    },
+    mongo_find_query,
     (err, user_data) => {
       if (err) {
         console.log(err);
