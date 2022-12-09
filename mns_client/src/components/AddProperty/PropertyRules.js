@@ -4,14 +4,28 @@ function PropertyRules({formData,setFormData}) {
 
     const handleChange = (event) => {
         const {name,value} =event.target;
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            house_rules: {
-                ...prevFormData.house_rules,
-                [name]:value.toString()
-            }
-    
-        }))
+
+        if (name === 'check_in' || name === 'check_out') {
+            setFormData(prevFormData => ({
+                ...prevFormData,
+                house_rules: {
+                    ...prevFormData.house_rules,
+                    [name]:value.toString()
+                }
+        
+            }))
+
+        }
+        else {
+            setFormData(prevFormData => ({
+                ...prevFormData,
+                house_rules: {
+                    ...prevFormData.house_rules,
+                    [name]:value.toString()
+                }
+        
+            }))
+        }
       }
 
       const handleChangeBool = (event) => {
@@ -25,6 +39,33 @@ function PropertyRules({formData,setFormData}) {
     
         }))
       }
+
+
+    const handleChangeCheck = (event) => {
+        let e_name = event.target.name
+        if (formData.amenities[e_name]) {
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            amenities: {
+                ...prevFormData.amenities,
+                [event.target.name]: false
+            }
+    
+        }))
+    }
+    else{
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            amenities: {
+                ...prevFormData.amenities,
+                [event.target.name]: true
+            }
+    
+        }))
+    }
+      }
+
+
 
   return (
     <div class="house-rules-container">
@@ -62,6 +103,64 @@ function PropertyRules({formData,setFormData}) {
             <input type="radio" id="pets_allowed" name="pets" value="false" checked={formData.house_rules.pets==="false"} onChange={handleChangeBool}/>
             <label for="pets_allowed">Pets are Not Allowed</label>
         </div>
+        <div class="form-group" id="form-group-check">
+            <h2>Amenities</h2>
+            <label>
+                <input type="checkbox" name="swimming_pool" checked= {formData.amenities.swimming_pool} onChange={handleChangeCheck} />
+                Infinity Pool
+            </label>
+            <label>
+                <input type="checkbox" name="natural_gas_barbeque" checked = {formData.amenities.natural_gas_barbeque} onChange={handleChangeCheck} />
+                Natural Gas Barbeque
+            </label>
+            <label>
+                <input type="checkbox" name="sun_lounger" checked = {formData.amenities.sun_lounger} onChange={handleChangeCheck} />
+                Sun Lounger
+            </label>
+            <label>
+                <input type="checkbox" name="garden" checked = {formData.amenities.garden} onChange={handleChangeCheck} />
+                Garden
+            </label>
+            <label>
+                <input type="checkbox" name="television" checked = {formData.amenities.television} onChange={handleChangeCheck} />
+                Television
+            </label>
+            {/* <label>
+                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
+                Smart TV
+            </label>
+            <label>
+                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
+                Sound System
+            </label>
+            <br/>
+
+            <label>
+                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
+                Kitchen
+            </label>
+            <label>
+                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
+                Coffee Maker
+            </label>
+            <label>
+                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
+                Wine Cooler
+            </label>
+            <label>
+                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
+                Wifi
+            </label>
+            <label>
+                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
+                Air Conditioning
+            </label>
+            <label>
+                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
+                Washer
+            </label> */}
+        </div>
+        
     </div>
   )
 }
