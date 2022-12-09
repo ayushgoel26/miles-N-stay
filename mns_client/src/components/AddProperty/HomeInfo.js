@@ -13,14 +13,14 @@ function HomeInfo({formData,setFormData}) {
   <div class="form-group">
     <label for="proprty_type" >Select Property Type</label>
     <select class="form-control form-control-sm" id="exampleFormControlSelect1" value={formData.property_type} onChange={(e)=>setFormData({...formData,property_type:e.target.value})}>
-      <option value = "TH">Tree House</option>
-      <option value = "A">Apartment</option>
-      <option value="V">Villa</option>
+      <option value = "Treehouse">Tree House</option>
+      <option value = "Apartment">Apartment</option>
+      <option value="Villa">Villa</option>
     </select>
   </div>
   <div class="form-group" >
     <label for="bed_count">Select Number of Beds</label>
-    <select class="form-control form-control-sm" id="exampleFormControlSelect1" value={formData.bed_count} onChange={(e)=>setFormData({...formData,bed_count:e.target.value})}>
+    <select class="form-control form-control-sm" id="exampleFormControlSelect1" value={formData.bed_count} onChange={(e)=>setFormData({...formData,bed_count:parseInt(e.target.value,10)})}>
     <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -34,7 +34,7 @@ function HomeInfo({formData,setFormData}) {
   </div>
   <div class="form-group">
     <label for="bath_count">Select Number of Baths</label>
-    <select class="form-control form-control-sm" id="exampleFormControlSelect1" value={formData.bath_count} onChange={(e)=>setFormData({...formData,bath_count:e.target.value})}>
+    <select class="form-control form-control-sm" id="exampleFormControlSelect1" value={formData.bath_count} onChange={(e)=>setFormData({...formData,bath_count:parseInt(e.target.value,10)})}>
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -49,16 +49,20 @@ function HomeInfo({formData,setFormData}) {
   <div class="form-group">
     <label for="bed_count">Select Cancellation Policy Type</label>
     <select class="form-control form-control-sm" id="exampleFormControlSelect1" value={formData.cancellation_policy} onChange={(e)=>setFormData({...formData,cancellation_policy:e.target.value})}>
-      <option value="Flexible">Flexible</option>
-      <option value="Moderate">Moderate</option>
-      <option value="Strict">Strict</option>
-      <option value="Restricted">Restricted</option>
+      <option value="flexible">Flexible</option>
+      <option value="moderate">Moderate</option>
+      <option value="strict">Strict</option>
+      <option value="restricted">Restricted</option>
 
     </select>
   </div>
   <div class="form-group">
     <label for="exampleFormControlTextarea1">Tell us About your House</label>
     <textarea class="form-control" id="prop_desc" rows="3" value={formData.description} onChange={(e)=>setFormData({...formData,description:e.target.value})}></textarea>
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Give a short Summary About Your House</label>
+    <textarea class="form-control" id="prop_summ" rows="3" value={formData.summary} onChange={(e)=>setFormData({...formData,summary:e.target.value})}></textarea>
   </div>
 </form>
 

@@ -151,15 +151,7 @@ body {
   font-size: 20px;
 } */
 
-/* image upload container */
-.image-upload-container {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+
 
 /* .image-upload-container input {
   margin: 5px;
@@ -262,4 +254,27 @@ input {
 
 input:focus {
   border: 3px solid rgb(98, 0, 255);
+}
+
+/* image upload container */
+.image-upload-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.image-upload-container img {
+  display: inline-block;
+  vertical-align: middle;
+  width: 100px;
+  height: 100px;
+}
+
+.image-upload-container .file-input {
+  display: inline-block;
+  vertical-align: middle;
 }

@@ -1,18 +1,31 @@
 import React from 'react'
 
+
 function PropertyAddress({formData,setFormData}) {
 
   const handleChange = (event) => {
     const {name,value} =event.target;
     console.log("inside handlechange")
+    if (Number.isNaN(value)) {
     setFormData(prevFormData => ({
         ...prevFormData,
         property_address: {
             ...prevFormData.property_address,
-            [name]:value
+            [name]:parseInt(value)
         }
 
     }))
+    }
+    else{
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            property_address: {
+                ...prevFormData.property_address,
+                [name]:value
+            }
+    
+        }))        
+    }
   }
   console.log("before return")  
   return (
@@ -24,7 +37,7 @@ function PropertyAddress({formData,setFormData}) {
             </div>
             <div class="form-group">
                 <label for="proprty_name">Unit Number</label>
-                <input type="text" class="form-control form-control-sm" id="unit_no" name="unit_no" placeholder="Enter Unit Number..." value={formData.property_address.unit_no} onChange={handleChange}/>
+                <input type="number" class="form-control form-control-sm" id="unit_no" name="unit_no" placeholder="Enter Unit Number..." value={formData.property_address.unit_no} onChange={handleChange}/>
             </div>
             <div class="form-group">
                 <label for="proprty_name">City</label>
@@ -40,7 +53,7 @@ function PropertyAddress({formData,setFormData}) {
             </div>
             <div class="form-group">
                 <label for="proprty_name">Country</label>
-                <input type="text" class="form-control form-control-sm" id="country" name="country" placeholder="Enter Country..." value={formData.property_address.state} onChange={handleChange}/>
+                <input type="text" class="form-control form-control-sm" id="country" name="country" placeholder="Enter Country..." value={formData.property_address.country} onChange={handleChange}/>
             </div>
         </form>
 
