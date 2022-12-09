@@ -1,15 +1,14 @@
 import PropertyCard from "./propertyCard";
+import { Row, Container } from "react-bootstrap";
 
 function Listings(props) {
-console.log(props.data)
   return (
-    <div class = 'container-fluid'> 
-        <div class = "row">
+    <Container fluid>
+        <Row>
             {props.data.map( (m,indx) => <PropertyCard key={indx} info={m} /> )}
-        </div>
-    </div>
-    
-  );
-}
+        </Row>
+    </Container>
+  )
+};
 
 export default Listings;
