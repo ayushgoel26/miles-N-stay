@@ -2,3 +2,7 @@
     color: red;
     display: none;
 }
+
+.modal-header{
+    background-color: color(srgb 0.0495 0.4301 0.9918) !important;
+}

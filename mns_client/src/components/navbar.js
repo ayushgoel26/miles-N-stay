@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Col } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import { BsFillQuestionCircleFill, BsPerson } from "react-icons/bs";
-import Button from "react-bootstrap/Button";
-import SignUpModal from "./signUpModal";
+import SignUpLoginModal from "./signUpLoginModal";
 
 import "./navbar.css";
 import SearchBar from "./searchbar";
@@ -34,13 +33,11 @@ function NavbarHome(props) {
             <BsFillQuestionCircleFill style={{ width: "2em", height: "2em" }} />
           </li>
           <li class="nav-item mx-2">
-            {/* <Button variant="primary" onClick={openSignUpModal}> */}
             <BsPerson
               onClick={openSignUpModal}
               style={{ width: "2em", height: "2em" }}
             />
-            {/* </Button> */}
-            <SignUpModal
+            <SignUpLoginModal
               showModal={showSignUpModal}
               closeModal={closeSignUpModal}
             />
