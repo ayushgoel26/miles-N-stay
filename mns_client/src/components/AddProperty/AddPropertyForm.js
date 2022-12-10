@@ -34,8 +34,8 @@ function AddPropertyForm() {
 
 
     house_rules: {
-      check_in: "",
-      check_out: "",
+      check_in: 12*60,
+      check_out: 12*60,
       check_in_type: "",
       smoking: false,
       parties: false,
@@ -52,15 +52,8 @@ function AddPropertyForm() {
       country: "",
     },
 
-    images: [{
-      // image_id: 0,
-      image_file : null,
-      // image_name: "",
-      // image_url: "",
-      // image_description: "",
-      // is_deleted: false,
-      // image_preview_url: ""
-    }],
+    images: [
+    ],
 
     amenities: {
       swimming_pool:false,
@@ -75,7 +68,7 @@ function AddPropertyForm() {
 
 
   const FormTitles = ["Property Information", "Property Address", "Property Price", "Propery Rules", "Property Images", "Guest Requirements"];
-  const PageDisplay = () => {
+  const PageDisplay = (page) => {
     if (page === 0) {
       return <HomeInfo formData={formData} setFormData={setFormData} />
     }
@@ -123,14 +116,16 @@ function AddPropertyForm() {
 
   return (
     <div className='form'>
-      <div className='progressbar'>
-        <div style={{ width: page === 0 ? "16.6%" : page === 1 ? "33.2%" : page === 2 ? "50%" : page === 3 ? "66.6%" : page === 4 ? "83.2%" : "100%" }}></div>
-      </div>
       <div className="form-container">
         <div className="header">
-          <h1>{FormTitles[page]}</h1>
+          <h1>Add A New Property</h1>
         </div>
-        <div className="body">{PageDisplay()}</div>
+        <div className="body">{PageDisplay(0)}</div>
+        <div className="body">{PageDisplay(1)}</div>
+        <div className="body">{PageDisplay(2)}</div>
+        <div className="body">{PageDisplay(3)}</div>
+        <div className="body">{PageDisplay(4)}</div>
+        <div className="body">{PageDisplay(5)}</div>
         <div className="footer">
           <button
             disabled={page === 0}
@@ -140,15 +135,10 @@ function AddPropertyForm() {
             }}>Prev</button>
           <button
             onClick={() => {
-              if (page === FormTitles.length - 1) {
                 window.alert("Submitting now")
                 handleSubmit()
-              }
-              else {
-                setPage((currPage) => currPage + 1)
-              }
             }}>
-            {page === FormTitles.length - 1 ? "Submit" : "Next"}
+            Submit
           </button>
         </div>
 

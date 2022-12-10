@@ -4,6 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { BsFillQuestionCircleFill, BsPerson } from "react-icons/bs";
 import Button from "react-bootstrap/Button";
 import SignUpModal from "./signUpModal";
+import {Link} from "react-router-dom";
 
 import "./navbar.css";
 import SearchBar from "./searchbar";
@@ -30,8 +31,15 @@ function NavbarHome(props) {
         id="basic-navbar-nav"
       >
         <ul class="navbar-nav ml-auto">
+        <li class="nav-item mx-2">
+            <Link to="/addProperty">
+            Become a Host
+            </Link>
+          </li>
           <li class="nav-item mx-2">
+            <Link to="/">
             <BsFillQuestionCircleFill style={{ width: "2em", height: "2em" }} />
+            </Link>
           </li>
           <li class="nav-item mx-2">
             {/* <Button variant="primary" onClick={openSignUpModal}> */}

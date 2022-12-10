@@ -1,4 +1,7 @@
 import React from 'react'
+import "../../stylesheets/addPropertyForm.css";
+import { Modal, Form, Row, Col, Card } from "react-bootstrap";
+
 
 function PropertyPrice({formData,setFormData}) {
 
@@ -15,20 +18,60 @@ function PropertyPrice({formData,setFormData}) {
   }
 
   return (
+
     <div class="price-container">
-        <div class="form-group">
-            <label for="proprty_name">Price Per Night</label>
-            <input type="text" placeholder='Enter Price Per Night...' id="per_night" name="per_night" value={formData.cost.per_night} onChange={handleChange}/>
-        </div>
-        <div class="form-group">
-            <label for="proprty_name">Deposit Amount</label>
-            <input type="text" placeholder='Enter Price Per Night...' id="deposit" name="deposit" value={formData.cost.deposit} onChange={handleChange}/>
-        </div>
-        <div class="form-group">
-            <label for="proprty_name">Cleaning Fee</label>
-            <input type="text" placeholder='Enter Price Per Night...' id="cleaning_fee" name="cleaning_fee" value={formData.cost.cleaning_fee} onChange={handleChange}/>
-        </div>
-    </div>
+      <Card style={{marginBottom:"5%",width:"60%"}}>
+        <Card.Header>Price Details</Card.Header>
+        <Card.Body  style={{padding:"10%"}}>
+    <Form>
+						
+						<Row sm="3" md="2">
+            
+							<Col sm="3" md="4">
+              <Form.Label>Enter Price Per Night *</Form.Label>
+              <Form.Control value={formData.cost.per_night}
+                                             type="number"
+                                             name="per_night"
+                                             id="Price Per Night"
+                                             placeholder={"Enter Price Per Night *"}
+                                             onChange={handleChange}
+                                        />
+              </Col>
+              {/* </Row>
+              <Row><br /></Row> */}
+              {/* <Row sm="2" md="2"> */}
+           
+							<Col sm="3" md="4">
+              <Form.Label>Enter Cleaning Fee *</Form.Label>
+              <Form.Control value={formData.cost.cleaning_fee}
+                                             type="number"
+                                             name="cleaning_fee"
+                                             id="Price Per Night"
+                                             placeholder={"Enter Price Per Night *"}
+                                             onChange={handleChange}
+                                        />
+              </Col>
+              {/* </Row>
+              <Row><br/></Row>
+              <Row sm="3" md="2"> */}
+            
+							<Col sm="3" md="4">
+              <Form.Label>Enter Deposit Amount *</Form.Label>
+              <Form.Control value={formData.cost.deposit}
+                                             type="number"
+                                             name="deposit"
+                                             id="Price Per Night"
+                                             placeholder={"Enter Price Per Night *"}
+                                             onChange={handleChange}
+                                        />
+
+              </Col>
+              </Row>
+              </Form>
+              </Card.Body>
+              </Card>
+              </div>
+
   )
 }
 
