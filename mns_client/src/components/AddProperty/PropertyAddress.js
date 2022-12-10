@@ -1,7 +1,14 @@
 import React from 'react'
-
+import { Modal, Form, Row, Col, Card } from "react-bootstrap";
+import "../../stylesheets/addPropertyForm.css";
+import { Country, State, City } from "country-state-city";
 
 function PropertyAddress({formData,setFormData}) {
+
+    const on_focus_error = (e) => {
+		document.getElementById(e.target.id + "_error").style.display = "none";
+		document.getElementById(e.target.id).style.border = "1px solid #ced4da";
+	};
 
   const handleChange = (event) => {
     const {name,value} =event.target;
@@ -30,51 +37,173 @@ function PropertyAddress({formData,setFormData}) {
   console.log("before return")  
   return (
     <div class="prop-addr-container">
-        <form>
-            <div class="form-group">
-                <label for="proprty_name">Street Name</label>
-                <input type="text" class="form-control form-control-sm" id="street" name="street" placeholder="Enter Street Name..." value={formData.property_address.street} onChange={handleChange}/>
-            </div>
-            <div class="form-group">
-                <label for="proprty_name">Unit Number</label>
-                <input type="number" class="form-control form-control-sm" id="unit_no" name="unit_no" placeholder="Enter Unit Number..." value={formData.property_address.unit_no} onChange={handleChange}/>
-            </div>
-            <div class="form-group">
-                <label for="proprty_name">City</label>
-                <input type="text" class="form-control form-control-sm" id="city" name="city" placeholder="Enter City..." value={formData.property_address.city} onChange={handleChange}/>
-            </div>
-            <div class="form-group">
-                <label for="proprty_name">State</label>
-                <input type="text" class="form-control form-control-sm" id="state" name="state" placeholder="Enter State..." value={formData.property_address.state} onChange={handleChange}/>
-            </div>
-            <div class="form-group">
-                <label for="proprty_name">Zip Code</label>
-                <input type="number" style={{ WebkitAppearance: "none" }} class="form-control form-control-sm" id="zip" name="zip" placeholder="Enter Zip Code..." value={formData.property_address.zip} onChange={handleChange}/>
-            </div>
-            <div class="form-group">
-                <label for="proprty_name">Country</label>
-                <input type="text" class="form-control form-control-sm" id="country" name="country" placeholder="Enter Country..." value={formData.property_address.country} onChange={handleChange}/>
-            </div>
-        </form>
+    <Card style={{marginBottom:"5%",width:"60%"}}>
+        <Card.Header>Property Address</Card.Header>
+        <Card.Body  style={{padding:"10%"}}>
+        <Form>
+        <Form.Group className="mb-3">
+                              
+                              <Row className="pb-2">
+                              
+                                   <Col>
+                                   <Form.Label>Street name</Form.Label>
+                                        <Form.Control
+                                             type="text"
+                                             id="street"
+                                             value={formData.property_address.street}
+                                             placeholder="Street *"
+                                             onFocus={(e) => on_focus_error(e)}
+                                             onChange={(e) =>
+                                                  setFormData({
+                                                       ...formData,
+                                                       property_address: {
+                                                            ...formData.property_address,
+                                                            street: e.target.value,
+                                                       },
+                                                  })
+                                             }
+                                        />
+                                        <Form.Text className="error" id="street_error">
+                                             Please enter Street Address
+                                        </Form.Text>
+                                   </Col>
+                                   <Col md="3" sm="4">
+                                   <Form.Label>Apartment Number</Form.Label>
+                                        <Form.Control
+                                             type="number"
+                                             placeholder="Unit No"
+                                             value = {formData.property_address.unit_no}
+                                             onChange={(e) =>
+                                                  setFormData({
+                                                       ...formData,
+                                                       property_address: {
+                                                            ...formData.property_address,
+                                                            unit_no: e.target.value,
+                                                       },
+                                                  })
+                                             }
+                                        />
+                                   </Col>
+                              </Row>
+                              <Row>
+                                   <Col>
+                                        <Form.Select
+                                             id="country"
+                                             value = {formData.property_address.country}
+                                             onFocus={(e) => on_focus_error(e)}
+                                             onChange={(e) => {
+                                                  setFormData({
+                                                       ...formData,
+                                                       property_address: {
+                                                            ...formData.property_address,
+                                                            country: e.target.value,
+                                                       },
+                                                  });
+                                                  document
+                                                       .getElementById("state")
+                                                       .removeAttribute("disabled");
+                                             }}
+                                        >
+                                             <option value={""}>Country *</option>
+                                             {Country.getAllCountries().map((country) => (
+                                                  <option value={country.isoCode} key={country.isoCode}>
+                                                       {country.name}
+                                                  </option>
+                                             ))}
+                                        </Form.Select>
+                                        <Form.Text className="error" id="country_error">
+                                             Please select country
+                                        </Form.Text>
+                                   </Col>
+                                   <Col>
+                                        <Form.Select
+                                             id="state"
+                                             value = {formData.property_address.state}
+                                             onFocus={(e) => on_focus_error(e)}
+                                             onChange={(e) => {
+                                                  setFormData({
+                                                       ...formData,
+                                                       property_address: {
+                                                            ...formData.property_address,
+                                                            state: e.target.value,
+                                                       },
+                                                  });
+                                                  document.getElementById("city").removeAttribute("disabled");
+                                             }}
+                                             disabled
+                                        >
+                                             <option value={""}>State *</option>
+                                             {State.getStatesOfCountry(formData.property_address.country).map(
+                                                  (state) => (
+                                                       <option value={state.isoCode} key={state.isoCode}>
+                                                            {state.name}
+                                                       </option>
+                                                  )
+                                             )}
+                                        </Form.Select>
+                                        <Form.Text className="error" id="state_error">
+                                             Please select state
+                                        </Form.Text>
+                                   </Col>
+                                   <Col>
+                                        <Form.Select
+                                             id="city"
+                                             value = {formData.property_address.city}
+                                             onFocus={(e) => on_focus_error(e)}
+                                             onChange={(e) => {
+                                                  setFormData({
+                                                       ...formData,
+                                                       property_address: {
+                                                            ...formData.property_address,
+                                                            city: e.target.value,
+                                                       },
+                                                  });
+                                             }}
+                                             disabled
+                                        >
+                                             <option value={""}>City *</option>
+                                             {City.getCitiesOfState(
+                                                  formData.property_address.country,
+                                                  formData.property_address.state
+                                             ).map((city) => (
+                                                  <option value={city.isoCode} key={city.isoCode}>
+                                                       {city.name}
+                                                  </option>
+                                             ))}
+                                        </Form.Select>
+                                        <Form.Text className="error" id="city_error">
+                                             Please select city
+                                        </Form.Text>
+                                   </Col>
+                                   <Col>
+                                        <Form.Control
+                                             type="text"
+                                             id="zip"
+                                             value = {formData.property_address.zip}
+                                             placeholder="Zip Code *"
+                                             pattern="\d{5,5}(-\d{4,4})?"
+                                             onFocus={(e) => on_focus_error(e)}
+                                             onChange={(e) =>
+                                                  setFormData({
+                                                       ...formData,
+                                                       property_address: {
+                                                            ...formData.property_address,
+                                                            zip: e.target.value,
+                                                       },
+                                                  })
+                                             }
+                                        />
+                                        <Form.Text className="error" id="zip_error">
+                                             Please enter Zip Code
+                                        </Form.Text>
+                                   </Col>
+                              </Row>
+                         </Form.Group>
+				</Form>
 
-        {/* <div>
-            <input type="text" placeholder='Enter Street Name...'/>
-        </div>
-        <div>
-            <input type="text" placeholder='Enter Unit Number...'/>
-        </div>
-        <div>
-            <input type="text" placeholder='Enter City...'/>
-        </div>
-        <div>
-            <input type="text" placeholder='Enter State...'/>
-        </div>
-        <div>
-            <input type="text" placeholder='Enter Zip...'/>
-        </div>
-        <div>
-            <input type="text" placeholder='Enter Country...'/>
-        </div> */}
+
+</Card.Body>
+</Card>
     </div>
   )
 }

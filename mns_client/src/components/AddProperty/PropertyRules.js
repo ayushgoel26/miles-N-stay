@@ -1,6 +1,35 @@
-import React from 'react'
+import React,{useState} from 'react'
+import "../../stylesheets/addPropertyForm.css";
+import { Modal, Form, Row, Col, Card } from "react-bootstrap";
+import TimePicker from 'react-bootstrap-time-picker';
 
 function PropertyRules({formData,setFormData}) {
+
+    const [isSmokingOn, setIsSmokingOn] = useState(false);
+    const [isPetsOn, setIsPetsOn] = useState(false);
+    const [isPartiesOn, setIsPartiesOn] = useState(false);
+
+    const handleChangeCheckin = (newTime) => {
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            house_rules: {
+                ...prevFormData.house_rules,
+                check_in:newTime
+            }
+    
+        }))
+    }
+
+    const handleChangeCheckout = (newTime) => {
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            house_rules: {
+                ...prevFormData.house_rules,
+                check_out:newTime
+            }
+    
+        }))
+    }
 
     const handleChange = (event) => {
         const {name,value} =event.target;
@@ -28,17 +57,48 @@ function PropertyRules({formData,setFormData}) {
         }
       }
 
-      const handleChangeBool = (event) => {
 
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            house_rules: {
-                ...prevFormData.house_rules,
-                [event.target.name]:event.target.value
-            }
+      const handleChangeSwitchSmoking = (event) => {
+
+            setIsSmokingOn(!isSmokingOn);
+            setFormData(prevFormData => ({
+                ...prevFormData,
+                house_rules: {
+                    ...prevFormData.house_rules,
+                    smoking:isSmokingOn
+                }
     
         }))
+
       }
+
+    const handleChangeSwitchPets = (event) => {
+
+                setIsPetsOn(!isPetsOn);
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    house_rules: {
+                        ...prevFormData.house_rules,
+                        pets:isPetsOn
+                    }
+
+            }))
+
+        }
+
+    const handleChangeSwitchParties = (event) => {
+
+            setIsPartiesOn(!isPartiesOn);
+            setFormData(prevFormData => ({
+                ...prevFormData,
+                house_rules: {
+                    ...prevFormData.house_rules,
+                    parties:isPartiesOn
+                }
+
+        }))
+
+    }
 
 
     const handleChangeCheck = (event) => {
@@ -69,99 +129,118 @@ function PropertyRules({formData,setFormData}) {
 
   return (
     <div class="house-rules-container">
-        <div class="form-group">
-            <label>Check-in Time </label>
-            <input type="time" placeholder='Enter Check-in time...' id="check_in" name="check_in" value={formData.house_rules.check_in} onChange={handleChange}/>
-        </div>
-        <div class="form-group">
-            <label>Check-out Time </label>
-            <input type="time" placeholder='Enter Check-out time...' id="check_out" name="check_out" value={formData.house_rules.check_out} onChange={handleChange}/>
-        </div>
-        <div class="form-group">
-            <label for="proprty_type" >Select Check-in Type</label>
-            <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="check_in_type" value={formData.house_rules.check_in_type} onChange={handleChange}>
-            <option value = "Locker">Locker</option>
-            <option value = "Self Check-in">Self Check-in</option>
-            <option value="Contact">Contact Host</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <input type="radio" id="smoking_allowed" name="smoking" value="true"  checked={formData.house_rules.smoking==="true"} onChange={handleChangeBool}/>
-            <label for="smoking_allowed">Smoking is Allowed</label>
-            <input type="radio" id="smoking_allowed" name="smoking" value="false"  checked={formData.house_rules.smoking==="false"} onChange={handleChangeBool}/>
-            <label for="smoking_allowed">Smoking is Not Allowed</label>
-        </div>
-        <div class="form-group">
-            <input type="radio" id="parties_allowed" name="parties" value = "true" checked={formData.house_rules.parties==="true"} onChange={handleChangeBool}/>
-            <label for="parties_allowed">Parties are Allowed</label>
-            <input type="radio" id="parties_allowed" name="parties" value="false" checked={formData.house_rules.parties==="false"} onChange={handleChangeBool}/>
-            <label for="parties_allowed">Parties are Not Allowed</label>
-        </div>
-        <div class="form-group" >
-            <input type="radio" id="pets_allowed" name="pets" value="true" checked={formData.house_rules.pets==="true"} onChange={handleChangeBool}/>
-            <label for="pets_allowed">Pets are Allowed</label>
-            <input type="radio" id="pets_allowed" name="pets" value="false" checked={formData.house_rules.pets==="false"} onChange={handleChangeBool}/>
-            <label for="pets_allowed">Pets are Not Allowed</label>
-        </div>
-        <div class="form-group" id="form-group-check">
-            <h2>Amenities</h2>
+    <Card style={{marginBottom:"5%",width:"60%"}}>
+        <Card.Header>Price Details</Card.Header>
+        <Card.Body  style={{padding:"10%"}}>
+		<Form.Group className="mb-3">
+						
+			<Row>
+                <Col>
+                    <Form.Label>Enter Check In Time</Form.Label>
+                    <TimePicker name="check_in" onChange={handleChangeCheckin} value={formData.house_rules.check_in} />
+
+
+                </Col>
+                <Col>
+                    <Form.Label>Enter Check Out Time</Form.Label>
+                    <TimePicker name="check_out" onChange={handleChangeCheckout} value={formData.house_rules.check_out} />
+                </Col>
+                <Col>
+                    <Form.Label>Select Check In Type</Form.Label>
+                    <Form.Select name = "check_in_type" value={formData.house_rules.check_in_type} onChange={handleChange}
+                                        >
+                                             <option value={"Self Check-in"} defaultChecked>Self Check-In</option>
+                                             <option value={"Locker"}>Locker</option>
+                                             <option value={"Contact"}>Contact Host</option>
+                    </Form.Select>
+                </Col>
+
+			</Row>
+            
+            <Row><br/></Row>
+
+            <Row>
+                <Col>
+                <Form.Check 
+                    type="switch"
+                    id="custom-switch"
+                    name = "smoking"
+                    label="Smoking is Allowed"
+                    checked={formData.house_rules.smoking} 
+                    onChange={handleChangeSwitchSmoking}
+                />
+                </Col>
+                <Col>
+                <Form.Check 
+                    type="switch"
+                    id="custom-switch"
+                    label="Pets Are Allowed"
+                    checked={formData.house_rules.pets} 
+                    onChange={handleChangeSwitchPets}
+                />
+                </Col>
+                <Col>
+                <Form.Check 
+                    type="switch"
+                    id="custom-switch"
+                    label="Parties Are Allowed"
+                    checked={formData.house_rules.parties} 
+                    onChange={handleChangeSwitchParties}
+                />
+                </Col>
+            </Row>
+        <Row>
+            <br/>
+        </Row>
+        <Row><Form.Label>Select The Amenities</Form.Label></Row>
+            <Col>
+            <Row>
             <label>
                 <input type="checkbox" name="swimming_pool" checked= {formData.amenities.swimming_pool} onChange={handleChangeCheck} />
-                Infinity Pool
+                 Infinity Pool
             </label>
             <label>
                 <input type="checkbox" name="natural_gas_barbeque" checked = {formData.amenities.natural_gas_barbeque} onChange={handleChangeCheck} />
-                Natural Gas Barbeque
+                 Natural Gas Barbeque
             </label>
+            </Row>
+            <Row>
             <label>
                 <input type="checkbox" name="sun_lounger" checked = {formData.amenities.sun_lounger} onChange={handleChangeCheck} />
                 Sun Lounger
             </label>
+            </Row>
+            </Col>
+            <Col>
+            <Row>
             <label>
                 <input type="checkbox" name="garden" checked = {formData.amenities.garden} onChange={handleChangeCheck} />
                 Garden
             </label>
+            </Row>
+            <Row>
             <label>
                 <input type="checkbox" name="television" checked = {formData.amenities.television} onChange={handleChangeCheck} />
                 Television
             </label>
-            {/* <label>
-                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
-                Smart TV
-            </label>
-            <label>
-                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
-                Sound System
-            </label>
+            </Row>
+            </Col>
+        <Row>
             <br/>
+        </Row>
+        <Row>
+          <Form.Label>Enter Any Additional Notes For the Guest</Form.Label>
+							{/* <Col sm="3" md="2"> */}
+              <Form.Control as="textarea" name="additional_notes" rows={4} value={formData.house_rules.additional_notes} onChange={handleChange}/>
+							{/* </Col> */}
+          </Row>
+          
 
-            <label>
-                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
-                Kitchen
-            </label>
-            <label>
-                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
-                Coffee Maker
-            </label>
-            <label>
-                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
-                Wine Cooler
-            </label>
-            <label>
-                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
-                Wifi
-            </label>
-            <label>
-                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
-                Air Conditioning
-            </label>
-            <label>
-                <input type="checkbox" value="value3" onChange={handleChangeCheck} />
-                Washer
-            </label> */}
-        </div>
-        
+          </Form.Group>
+          </Card.Body>
+          </Card>
     </div>
+
   )
 }
 
