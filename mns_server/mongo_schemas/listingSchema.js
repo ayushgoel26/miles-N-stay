@@ -39,7 +39,11 @@ const ListingSchema = new Schema({
   },
   room_type: {
     type: String,
-    enum: [""],
+    enum: [
+    "Private Room",
+    "Shared Room",
+    "Entire Home",
+    "Hotel Room"],
     required: true,
   },
   max_nights: {
@@ -106,43 +110,43 @@ const ListingSchema = new Schema({
       type: Number,
       min: 0,
       max: 5,
-      required: true,
+      required: false,
     },
     cleanliness: {
       type: Number,
       min: 0,
       max: 5,
-      required: true,
+      required: false,
     },
     communication: {
       type: Number,
       min: 0,
       max: 5,
-      required: true,
+      required: false,
     },
     check_in: {
       type: Number,
       min: 0,
       max: 5,
-      required: true,
+      required: false,
     },
     accuracy: {
       type: Number,
       min: 0,
       max: 5,
-      required: true,
+      required: false,
     },
     location: {
       type: Number,
       min: 0,
       max: 5,
-      required: true,
+      required: false,
     },
     value: {
       type: Number,
       min: 0,
       max: 5,
-      required: true,
+      required: false,
     },
   },
   house_rules: {
@@ -213,27 +217,29 @@ const ListingSchema = new Schema({
       },
     },
   },
-  images: [
-    {
-      image_id: {
-        type: String,
-      },
-      image_name: {
-        type: String,
-      },
-      image_url: {
-        type: String,
-      },
-      image_description: {
-        type: String,
-      },
-      is_deleted: {
+  images: [String],
+  amenities: {
+    sun_lounger: {
         type: Boolean,
         default: false,
       },
-    },
-  ],
-  amenities: [String],
+      swimming_pool: {
+        type: Boolean,
+        default: false,
+      },
+      natural_gas_barbeque: {
+        type: Boolean,
+        default: false,
+      },
+      television: {
+        type: Boolean,
+        default: false,
+      },
+      garden: {
+        type: Boolean,
+        default: false,
+      },
+  },
   reviews: [
     {
       reviewer: {

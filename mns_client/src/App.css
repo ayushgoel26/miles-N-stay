@@ -25,7 +25,8 @@ body {
 
 .form-container {
   width: 90%;
-  height: 90%;
+  height: 100%;
+  margin:"10%";
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
@@ -258,8 +259,8 @@ input:focus {
 
 /* image upload container */
 .image-upload-container {
-  height: 100%;
-  width: 100%;
+  height: 80%;
+  width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -267,12 +268,12 @@ input:focus {
 }
 
 
-.image-upload-container img {
+/* .image-upload-container img {
   display: inline-block;
   vertical-align: middle;
   width: 100px;
   height: 100px;
-}
+} */
 
 .image-upload-container .file-input {
   display: inline-block;
