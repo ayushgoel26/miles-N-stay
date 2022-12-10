@@ -31,6 +31,8 @@ import {
 function ListingDetails() {
 
 const [property, setProperty] = useState(null);
+const [startDate, setStartDate] = useState('');
+const [endDate, setEndDate] = useState('');
 
 // const useStyles = makeStyles((theme) => ({
 //     star: {
@@ -42,6 +44,25 @@ const [property, setProperty] = useState(null);
 //       cursor: 'pointer',
 //     },
 //   }));
+const reserve = () => { 
+  let requestBody = {
+    "start_date": startDate,
+    "end_date": endDate,
+    "status": "pending",
+    "host_id": property.host_id,
+    "guest_id": property.host_id,
+    "property_id": property._id
+  }
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestBody),
+  };
+  fetch("http://localhost:3000/reservations/", requestOptions)
+    .then((response) => response.json())
+    .then((data) => console.log(data));
+
+}
 
 
 useEffect(() => {
@@ -51,7 +72,7 @@ useEffect(() => {
           "http://localhost:3000/listings/6393d4817fcee3470f65b6f4"
         )
       ).json();
-      console.log(data)
+      // console.log(data)
       setProperty(data);
       
     };
@@ -69,7 +90,7 @@ useEffect(() => {
     setOpen(false);
   };
 
-  console.log(property)
+  // console.log(property)
   const handleRating = (newRating) => {
     setRating(newRating);
   };
@@ -176,17 +197,20 @@ useEffect(() => {
           <TextField
             id="checkin-date"
             label="Check-in date"
+            value={startDate}
             type="date"
             variant="filled"
             fullWidth
             InputLabelProps={{
               shrink: true,
             }}
+            onChange={(e)=>setStartDate(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             id="checkout-date"
+            value={endDate}
             label="Check-out date"
             type="date"
             variant="filled"
@@ -194,6 +218,7 @@ useEffect(() => {
             InputLabelProps={{
               shrink: true,
             }}
+            onChange={(e)=>setEndDate(e.target.value)}
           />
         </Grid>
       </Grid>
@@ -214,7 +239,7 @@ useEffect(() => {
         <MenuItem value={6}>6</MenuItem>
       </Select>
     
-      <Grid container style={{marginTop:"2%",alignItems:"center"}} justify='center' alignContent='flex-start'>
+      <Grid container style={{marginTop:"2%",alignItems:"center"}} alignContent='flex-start'>
       <Grid item alignItems="center" justifyContent='center' xs={12}>
       <Typography>Price Per Night : ${property.cost.per_night}</Typography>
       </Grid>
@@ -234,7 +259,7 @@ useEffect(() => {
       </Grid>
       {/* </Grid> */}
 
-      <Button style = {{marginTop:"3%"}} variant="contained" color="primary" size="large" fullWidth>
+      <Button style = {{marginTop:"3%"}} variant="contained" color="primary" size="large" onClick={reserve} fullWidth>
           Book Now
         </Button>
 
@@ -324,7 +349,7 @@ useEffect(() => {
             ))}
             </ul>
         }
-        {property.reviews.length == 0 &&
+        {property.reviews.length === 0 &&
         
 
         <Typography variant="h7">No Reviews Yet</Typography>

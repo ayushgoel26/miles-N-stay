@@ -26,6 +26,7 @@ function App() {
       <Routes>
       <Route exact path="/" element={<Homepage setListingsData={setListingsData}
           setShowHomePage={setShowHomePage}/>} />
+      <Route path="/allProperties" element={<Listings setListingsData={setListingsData} ListingsData={ListingsData} />} />
       <Route path="/addProperty" element={<AddPropertyForm/>} />
       <Route path="/listingDetails" element={<ListingDetails/>} /> 
       <Route path="/editProperty" element={<EditPropertyModal/>} /> 

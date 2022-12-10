@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Form, Row, Button, Card } from "react-bootstrap";
+import {Link} from "react-router-dom";
 
 function Search(props) {
   const searchParams = new URLSearchParams();
@@ -42,18 +43,21 @@ function Search(props) {
       console.log(err);
     }
   };
-  const browseAll = async (e) => {
-    e.preventDefault();
-    try {
-      let api_url = "http://localhost:3000/listings";
-      let listings = await fetch(api_url);
-      let listingsData = await listings.json();
-      props.dataSetter(listingsData);
-      props.setShowHomePage(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const browseAll = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     let api_url = "http://localhost:3000/listings";
+  //     let listings = await fetch(api_url);
+  //     let listingsData = await listings.json();
+  //     props.dataSetter(listingsData);
+  //     props.setShowHomePage(false);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+
+
 
   return (
     <Card id="search-card" className="col-md-4">
@@ -124,9 +128,10 @@ function Search(props) {
               {" "}
               <b>
                 Not sure where to go?{" "}
-                <a href="/" onClick={browseAll}>
+
+                <Link to="/allProperties">
                   Browse here!
-                </a>
+                </Link>
               </b>
             </p>
           </Form.Group>
