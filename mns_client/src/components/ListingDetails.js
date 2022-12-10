@@ -23,26 +23,27 @@ import {
 
   } from '@material-ui/core'
 
-
+  import mongoose from 'mongoose'
   import StarIcon from '@material-ui/icons/Star';
   import StarBorderIcon from '@material-ui/icons/StarBorder';
+  import { Rating } from '@material-ui/lab';
   
  
 function ListingDetails() {
 
 const [property, setProperty] = useState(null);
 
-// const useStyles = makeStyles((theme) => ({
-//     star: {
-//       color: '#FFC107',
-//       cursor: 'pointer',
-//     },
-//     starBorder: {
-//       color: '#FFC107',
-//       cursor: 'pointer',
-//     },
-//   }));
+const initial_review  = {
+  reviewer : {
+    name:"Abhirup Bhattacharya"
+},
+property_id:'6393d4817fcee3470f65b6f4',
+rating:0,
+comment:""
+}
 
+const [reviewData,setReviewData] = useState(initial_review)
+const [reviews,setReviews] = useState(null)
 
 useEffect(() => {
     const dataFetch = async () => {
@@ -59,6 +60,22 @@ useEffect(() => {
     dataFetch();
   }, []);
 
+
+  useEffect(() => {
+    const reviewFetch = async () => {
+      const data = await (
+        await fetch(
+          "http://localhost:3000/listings/reviews/6393d4817fcee3470f65b6f4"
+        )
+      ).json();
+      console.log(data)
+      setReviews(data);
+      
+    };
+
+    reviewFetch();
+  }, []);
+
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -66,18 +83,36 @@ useEffect(() => {
   };
 
   const handleClose = () => {
+    //const formData1 = new FormData();
+    //formData1.append('property_name', 'Mi Casa');
+    //formData1.append('property_type', 'Boat');
+
+    
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(reviewData),
+    };
+    fetch("http://localhost:3000/listings/reviews", requestOptions)
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error)=>console.log(error));
+
     setOpen(false);
   };
 
   console.log(property)
   const handleRating = (newRating) => {
     setRating(newRating);
+    setReviewData({...reviewData,rating:newRating})
   };
   const [rating, setRating] = React.useState(0);
 //   const classes = useStyles();
 
 
-  if(property) {
+
+
+  if(property && reviews) {
   return (
 
 
@@ -271,6 +306,8 @@ useEffect(() => {
             multiline
             rows="4"
             fullWidth
+            value={reviewData.comment} 
+            onChange={(event)=>setReviewData({...reviewData,comment:event.target.value})}
           />
           <div>
             <Typography>Rating:       
@@ -311,20 +348,26 @@ useEffect(() => {
 
         <Divider style={{marginTop:"1%"}}/>
         <List>
-            {property.reviews.length > 0 &&
-            <ul>
+            {reviews.length > 0 &&
+            <ol>
             
-            {property.reviews.map((review) => (
+            {reviews.map((review) => (
             <li key={review.reviewer.id}>
                 <Typography variant="h6">{review.reviewer.name}<br/></Typography>
                 <Typography variant="h7">{review.date}<br/></Typography>
+                <Rating
+                  name="rating"
+                  defaultValue={review.rating}
+                  precision={0.5}
+                  size="large"
+                />
                 <Typography variant="body2" gutterBottom>{review.comment}</Typography>
                 <br/>
             </li>
             ))}
-            </ul>
+            </ol>
         }
-        {property.reviews.length == 0 &&
+        {reviews.length == 0 &&
         
 
         <Typography variant="h7">No Reviews Yet</Typography>
