@@ -5,8 +5,11 @@ const ListingSchema = require("../mongo_schemas/listingSchema");
 const ReviewsSchema = require("../mongo_schemas/ReviewsSchema");
 const multer = require("multer");
 const fs = require("fs");
+const { response } = require("express");
 
-const upload = multer({ dest: "assets/uploads/" });
+const multi_upload = multer({
+  dest: "../mns_client/public/img/propertyImages/",
+}).array("file", 10);
 
 const mongoDB = "mongodb://localhost:27017/milesNstay";
 
@@ -139,8 +142,40 @@ router.get("/reviews/:id", function (req, res) {
 //   });
 
 router.post("/save-image", (req, res) => {
-  console.log("Got a post request");
-  res.send("Got a post request");
+  multi_upload(req, res, function (err) {
+    console.log(req.files);
+    var response = [];
+    if (req.files.length > 0) {
+      for (var i = 0; i < req.files.length; i++) {
+        response.push(req.files[i].filename);
+      }
+    }
+    if (err instanceof multer.MulterError) {
+      console.log(err);
+      res
+        .status(500)
+        .send({
+          error: { msg: `multer uploading error: ${err.message}` },
+        })
+        .end();
+      return;
+    } else if (err) {
+      //unknown error
+      if (err.name == "ExtensionError") {
+        res
+          .status(413)
+          .send({ error: { msg: `${err.message}` } })
+          .end();
+      } else {
+        res
+          .status(500)
+          .send({ error: { msg: `unknown uploading error: ${err.message}` } })
+          .end();
+      }
+      return;
+    }
+    res.json(response);
+  });
 });
 
 module.exports = router;
