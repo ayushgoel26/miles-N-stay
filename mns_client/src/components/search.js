@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form, Row, Button, Card } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Search() {
   const searchParams = new URLSearchParams();
