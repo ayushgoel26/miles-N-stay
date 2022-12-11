@@ -16,10 +16,10 @@ function Reservations() {
     const [reservations, setReservations] = useState([])
     function refreshPage() {
         window.location.reload(false);
-      }
+    }
     const deleteReservation = async (id) => {
         if (window.confirm(`Are you sure you want to delete the reservation?`)) {
-            let url =`http://localhost:3000/reservations/${id}`
+            let url = `http://localhost:3000/reservations/${id}`
             const res = await axios.delete(url);
             navigate(0);
             res.status();

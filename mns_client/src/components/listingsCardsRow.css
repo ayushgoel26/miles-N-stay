@@ -1,8 +1,8 @@
 .card-img-top {
-    height:15em;
-    object-fit: cover;
-    min-height: 15em;
-  }
+  height: 15em;
+  object-fit: cover;
+  min-height: 15em;
+}
 
 .listingsCard {
   max-height: 25em;
