@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import Dropzone from "react-dropzone-uploader";
 import "react-dropzone-uploader/dist/styles.css";
-import FileBase64 from "react-file-base64";
-import { Modal, Form, Row, Col, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import axios from "axios";
 
 function PropertyImage({ formData, setFormData }) {
@@ -23,55 +21,37 @@ function PropertyImage({ formData, setFormData }) {
     }));
   };
 
-  // const handleChangeStatus = async ({ meta,file }, status) => {
-  //   console.log(status, meta)
-  //   console.log(file.name)
-  //   if (status === "done") {
-
-  //     try{
-  //     const response = await fetch("https://localhost:3000/listings/save-image",{
-  //       method: "POST",
-  //       body: file
-  //     });
-  //     const imageUrl = await response.text()
-  //     setFormData(prevFormData => ({
-  //       ...prevFormData,
-  //       images: [
-  //           ...prevFormData.images,
-  //           imageUrl
-  //       ]
-  //   }))
-  //   } catch(error)
-  //   {
-  //     console.error(error)
-  //   }
-
-  //   }
-  //   else {
-  //     setFiles([
-  //       ...files,
-  //       file
-  //     ]);
-
-  //   }
-  // }
-
   const fileSelectedHandler = (event) => {
-    console.log(event.target.files[0]);
-    setSelectedFiles(event.target.files[0]);
+    console.log(event.target.files);
+    setSelectedFiles(event.target.files);
   };
 
   const fileUploadHandler = async () => {
+    const Data = new FormData();
+    Object.values(selectedFile).forEach((file) => {
+      Data.append("file", file);
+    });
     try {
-      const response = await fetch(
-        "https://localhost:3000/listings/save-image",
+      const res = await axios.post(
+        "http://localhost:3000/listings/save-image",
+        Data,
         {
-          method: "POST",
-          body: "hi",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
-    } catch (error) {
-      console.log(error);
+      console.log(res.data);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        images: res.data,
+      }));
+    } catch (err) {
+      if (err.response.status === 500) {
+        console.log(err);
+      } else {
+        console.log(err.response.data.msg);
+      }
     }
   };
 
@@ -79,23 +59,7 @@ function PropertyImage({ formData, setFormData }) {
     <Card style={{ marginBottom: "5%", width: "60%", marginLeft: "20%" }}>
       <Card.Header>Upload Property Images</Card.Header>
       <Card.Body style={{ padding: "10%" }}>
-        {/* <Dropzone
-      getUploadParams={getUploadParams}
-      onChangeStatus={handleChangeStatus}
-      inputContent="Drop Your Property Images Here or Click to Browse"
-      // initialFiles={[formData.images]}
-      //styles={{ dropzone: { minHeight: 200, maxHeight: 300, marginLeft:"20%",width:"60%",justifyContent:"center",alignItems:"center"}}}
-    /> */}
-        {/* <FileBase64 multiple = {true}
-    value={formData.images}
-    onDone={({base64})=> setFormData(prevFormData => ({
-      ...prevFormData,
-      images: [
-          ...prevFormData.images,
-          base64
-      ]}))} */}
-
-        <input type="file" onChange={fileSelectedHandler} />
+        <input type="file" onChange={fileSelectedHandler} multiple="multiple" />
         <button onClick={fileUploadHandler}>Upload</button>
       </Card.Body>
     </Card>
