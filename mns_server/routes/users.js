@@ -85,4 +85,47 @@ router.post("/", function (req, res) {
   });
 });
 
+//API to make user to host
+router.put("/:id", function (req, res) {
+  user.findById(req.params.id, (err, user_data) => {
+    if (err) {
+      console.log(err);
+      return err;
+    } else {
+      user_data.is_host = true;
+
+      user_data.save((err) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send('User updated successfully');
+        }
+      });
+
+    }
+  });
+});
+
+router.post("/", function (req, res) {
+  console.log(req.body);
+  data = req.body;
+  console.log(data.username);
+  user.find({ user: data.username }, (err, user_data) => {
+    if (err) {
+      console.log(err);
+      return err;
+    } else {
+      if (user_data.length == 0) {
+        res.json("login failed");
+      } else {
+        if (data.password === user_data[0].password) {
+          res.json("login successful");
+        } else {
+          res.json("login failed");
+        }
+      }
+    }
+  });
+});
+
 module.exports = router;

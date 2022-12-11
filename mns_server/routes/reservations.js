@@ -5,6 +5,13 @@ const ReservationSchema = require("../mongo_schemas/ReservationSchema")
 var router = express.Router();
 const mongoDB = "mongodb://localhost:27017/milesNstay";
 
+
+const moment = require('moment')
+
+const currDate = new Date().toISOString().substring(0, 10)
+
+console.log(currDate)
+
 mongoose.connect(mongoDB).then((dbo) => {
     console.log("DB connected")
 }, (err) => {
@@ -12,74 +19,140 @@ mongoose.connect(mongoDB).then((dbo) => {
     console.error(err)
 });
 const Reservations = mongoose.model("reservations", ReservationSchema);
+// const currDate = new Date(Date.now)
 
 router.get('/', (req, res) => {
-    Reservations.find(
+    Reservations.findById(
         {},
         (err, reservations) => {
-          if (err) {
-            console.log(err);
-          } else {
-            res.json(reservations);
-          }
-          return;
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(reservations);
+            }
+            return;
         }
-      );
+    );
 });
 
 router.post('/', (req, res) => {
     if ("receipt_id" in req.body) {
         req.body['receipt_id'] = mongoose.Types.ObjectId(req.body['receipt_id'])
     }
-    
+
     if ("transaction_id" in req.body) {
         req.body['transaction_id'] = mongoose.Types.ObjectId(req.body['transaction_id'])
     }
 
     if (!("property_name" in req.body)) {
-        return res.status(500).send({'error': 'property_name is required'})
+        return res.status(500).send({ 'error': 'property_name is required' })
     }
 
     if ("host_id" in req.body) {
         req.body['host_id'] = mongoose.Types.ObjectId(req.body['host_id'])
     } else {
-        return res.status(500).send({'error': 'host_id is required'})
+        return res.status(500).send({ 'error': 'host_id is required' })
     }
 
     if ("guest_id" in req.body) {
         req.body['guest_id'] = mongoose.Types.ObjectId(req.body['guest_id'])
     } else {
-        return res.status(500).send({'error': 'guest_id is required'})
+        return res.status(500).send({ 'error': 'guest_id is required' })
     }
 
     if ("property_id" in req.body) {
         req.body['property_id'] = mongoose.Types.ObjectId(req.body['property_id'])
     } else {
-        return res.status(500).send({'error': 'property_id is required'})
+        return res.status(500).send({ 'error': 'property_id is required' })
     }
-    
+
     console.log(req.body)
     Reservations.create(req.body, (err, reservation) => {
         if (err) {
             console.log(err);
             return res.status(500).send(err)
         }
-        res.send({'id': reservation._id})
+        res.send({ 'id': reservation._id })
     });
 });
 
 router.delete('/:id', (req, res) => {
     Reservations.deleteOne(
-        {"_id": req.params.id},
+        { "_id": req.params.id },
         (err, reservations) => {
-          if (err) {
-            console.log(err);
-          } else {
-            res.json(reservations);
-          }
-          return;
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(reservations);
+            }
+            return;
         }
-      );
+    );
 });
+
+
+router.get('/upcoming/:id', (req, res) => {
+    const { id } = req.params
+    Reservations.find(
+        {
+            "host_id": id,
+            "start_date": {
+                "$gt": currDate
+            }
+        },
+        (err, reservations) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(reservations);
+            }
+            return;
+        }
+    );
+});
+
+router.get('/past/:id', (req, res) => {
+    const { id } = req.params
+    Reservations.find(
+        {
+            "host_id": id,
+            "end_date": {
+                "$lt": currDate
+            }
+        },
+        (err, reservations) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(reservations);
+            }
+            return;
+        }
+    );
+});
+
+router.get('/current/:id', (req, res) => {
+    const { id } = req.params
+    Reservations.find(
+        {
+            "host_id": id,
+            "start_date": {
+                "$lte": currDate
+            },
+            "end_date": {
+                "$gte": currDate
+            }
+        },
+        (err, reservations) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(reservations);
+            }
+            return;
+        }
+    );
+});
+
 
 module.exports = router;

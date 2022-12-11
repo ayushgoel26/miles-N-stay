@@ -10,41 +10,40 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function Reservations() {
+function Reservations(props) {
     const navigate = useNavigate();
-    // var reservations = [];
-    const [reservations, setReservations] = useState([])
+    var reservations = props.data;
+
+    console.log(props)
     function refreshPage() {
         window.location.reload(false);
-      }
-    const deleteReservation = async (id) => {
+    }
+    const deleteReservation = async (reservation) => {
         if (window.confirm(`Are you sure you want to delete the reservation?`)) {
-            let url =`http://localhost:3000/reservations/${id}`
-            const res = await axios.delete(url);
-            navigate(0);
-            res.status();
+            console.log(new Date(reservation.start_date))
+            console.log(new Date().getDate())
+
+            // console.log((new Date("2022-12-23").getDate() + 2) === new Date(reservations.start_date).getDate())
+            if (new Date(reservation.start_date).getDate() - new Date().getDate() <= 2) {
+                alert("Booking Cannot Be Cancelled 48 hours Prior to the Booking Start")
+            }
+            else {
+                let url = `http://localhost:3000/reservations/${reservation._id}`
+                const res = await axios.delete(url);
+                alert("Booking Cancelled Successfully!")
+                navigate(0);
+                res.status();
+
+            }
         };
     }
 
-    useEffect(() => {
-        const reviewFetch = async () => {
-            const data = await (
-                await fetch(
-                    "http://localhost:3000/reservations/"
-                )
-            ).json();
-            console.log(data)
-            setReservations(data)
-        };
-        reviewFetch();
-    }, []);
+
+
 
     return (
         <Grid item xs={12} sm={12} style={{ margin: "2%", width: "100%" }}>
             <Card style={{ padding: "3%" }}>
-                <Typography variant="h6">
-                    Your Reservations
-                </Typography>
                 <Divider style={{ marginTop: "1%", height: "3px" }} />
 
                 <List>
@@ -65,9 +64,11 @@ function Reservations() {
                                                 {reservation.start_date.substring(0, 10)} to {reservation.end_date.substring(0, 10)}
                                             </Typography>
                                         </Grid>
-                                        <Grid item>
-                                            <BsFillTrashFill color="red" onClick={(e) => { deleteReservation(reservation._id) }} />
-                                        </Grid>
+                                        {props.tab === "1" &&
+                                            <Grid item>
+                                                <BsFillTrashFill color="red" onClick={(e) => { deleteReservation(reservation) }} />
+                                            </Grid>
+                                        }
                                     </Grid>
                                     <br />
                                     <Divider style={{ marginTop: "1%", marginBottom: "1%", height: "2px" }} />
