@@ -7,7 +7,6 @@ import {
   Card,
   CardMedia,
   CardContent,
-  Chip,
   Button,
   Divider,
   List,
@@ -19,18 +18,16 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  makeStyles,
 } from "@material-ui/core";
 
-import mongoose from "mongoose";
 import StarIcon from "@material-ui/icons/Star";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import { Rating } from "@material-ui/lab";
 
 function ListingDetails() {
   const [property, setProperty] = useState(null);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(new Date().getDate());
+  const [endDate, setEndDate] = useState(new Date().getDate() + 1);
 
   const reserve = () => {
     let requestBody = {
@@ -65,10 +62,13 @@ function ListingDetails() {
   useEffect(() => {
     const dataFetch = async () => {
       const data = await (
-        await fetch("http://localhost:3000/listings/6393d4817fcee3470f65b6f4")
+        await fetch(
+          "http://localhost:3000/listings/6393d4817fcee3470f65b6f4"
+        )
       ).json();
       // console.log(data)
       setProperty(data);
+
     };
 
     dataFetch();
@@ -112,13 +112,12 @@ function ListingDetails() {
     setOpen(false);
   };
 
-  // console.log(property)
   const handleRating = (newRating) => {
     setRating(newRating);
-    setReviewData({ ...reviewData, rating: newRating });
+    setReviewData({ ...reviewData, rating: newRating })
   };
   const [rating, setRating] = React.useState(0);
-  //   const classes = useStyles();
+  setOpen(false);
 
   if (property && reviews) {
     return (
@@ -142,6 +141,7 @@ function ListingDetails() {
                 style={{ margin: "1%" }}
               />
             </Card>
+
           </Grid>
         </Grid>
 
@@ -358,9 +358,9 @@ function ListingDetails() {
                 <Dialog open={open} onClose={handleClose}>
                   <DialogTitle>Add Review</DialogTitle>
                   <DialogContent>
-                    <Typography variant="body1">
-                      {" "}
-                      Posting as Abhirup Bhattacharya
+                    <Typography
+                      variant="body1"
+                    > Posting as Abhirup Bhattacharya
                     </Typography>
                     <TextField
                       margin="dense"
@@ -412,7 +412,7 @@ function ListingDetails() {
                       Submit
                     </Button>
                   </DialogActions>
-                </Dialog>{" "}
+                </Dialog>
               </div>
             </Typography>
 
@@ -444,7 +444,7 @@ function ListingDetails() {
                   ))}
                 </ol>
               )}
-              {reviews.length == 0 && (
+              {reviews.length === 0 && (
                 <Typography variant="h7">No Reviews Yet</Typography>
               )}
             </List>
