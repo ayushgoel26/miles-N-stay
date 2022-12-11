@@ -9,6 +9,8 @@ import Listings from "./components/listings";
 import Homepage from "./components/homepage";
 import AddPropertyForm from "./components/AddProperty/AddPropertyForm";
 import ListingDetails from "./components/ListingDetails";
+import Reservations from "./components/reservations";
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -20,6 +22,7 @@ root.render(
         <Route path="/allProperties" element={<Listings />} />
         <Route path="/addProperty" element={<AddPropertyForm />} />
         <Route path="/listingDetails" element={<ListingDetails />} />
+        <Route path="/allReservations" element={<Reservations />} />
       </Routes>
     </Router>
     <App />

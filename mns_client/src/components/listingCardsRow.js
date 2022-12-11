@@ -7,7 +7,7 @@ const ListingsCardsRow = (props) => {
     <Row md={2} lg={4} sm={1} key={props.keys} className="mx-2 my-2">
       {props.cards.map((d) => (
         <Col key={d.id} className="mb-3">
-          <Card>
+          <Card className='listingsCard'>
             <Link to={`/listingDetails`} state={{ from: d._id }}>
               <Card.Img
                 className="rounded"
