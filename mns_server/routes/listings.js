@@ -46,22 +46,22 @@ mongoose.connect(mongoDB).then(
 
 router.get("/", function (req, res) {
   const Listings = mongoose.model("properties", ListingSchema);
-  if (city === undefined) {
+  if (req.query.city === undefined) {
     var city = "";
   } else {
     var city = decodeURI(req.query.city);
   }
-  if (type === undefined) {
+  if (req.query.type === undefined) {
     var type = "";
   } else {
     var type = req.query.type;
   }
-  if (endDate === undefined) {
+  if (req.query.endDate === undefined) {
     var endDate = "";
   } else {
     var endDate = req.query.endDate;
   }
-  if (startDate === undefined) {
+  if (req.query.startDate === undefined) {
     var startDate = "";
   } else {
     var startDate = req.query.startDate;
@@ -75,6 +75,7 @@ router.get("/", function (req, res) {
       if (err) {
         console.log(err);
       } else {
+        console.log(listings.length);
         res.json(listings);
       }
       return;
