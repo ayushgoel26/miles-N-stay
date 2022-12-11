@@ -8,7 +8,7 @@ import { Link, useLocation } from "react-router-dom";
 import "./navbar.css";
 import SearchBar from "./searchbar";
 
-function NavbarHome(props) {
+function NavbarHome() {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const openSignUpModal = () => setShowSignUpModal(true);
   const closeSignUpModal = () => setShowSignUpModal(false);
@@ -18,12 +18,14 @@ function NavbarHome(props) {
   return (
     <Navbar className="row fix-top" bg="light" expand="md" id="navbarmenu">
       <Col sm="1" className="logo-div">
-        <Navbar.Brand href="/">
-          <img
-            src="/logo.png"
-            className="d-inline-block align-top logo-img"
-            alt="React Bootstrap logo"
-          />
+        <Navbar.Brand>
+          <Link to="/">
+            <img
+              src="/logo.png"
+              className="d-inline-block align-top logo-img"
+              alt="React Bootstrap logo"
+            />
+          </Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
       </Col>

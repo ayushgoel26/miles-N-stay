@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 import {
   Container,
@@ -28,6 +29,9 @@ function ListingDetails() {
   const [property, setProperty] = useState(null);
   const [startDate, setStartDate] = useState(new Date().getDate());
   const [endDate, setEndDate] = useState(new Date().getDate() + 1);
+
+  const location = useLocation();
+  const listing_id = location.state.from;
 
   const reserve = () => {
     let requestBody = {
@@ -62,9 +66,7 @@ function ListingDetails() {
   useEffect(() => {
     const dataFetch = async () => {
       const data = await (
-        await fetch(
-          "http://localhost:3000/listings/6393d4817fcee3470f65b6f4"
-        )
+        await fetch("http://localhost:3000/listings/" + listing_id)
       ).json();
       // console.log(data)
       setProperty(data);
@@ -77,9 +79,7 @@ function ListingDetails() {
   useEffect(() => {
     const reviewFetch = async () => {
       const data = await (
-        await fetch(
-          "http://localhost:3000/listings/reviews/6393d4817fcee3470f65b6f4"
-        )
+        await fetch("http://localhost:3000/listings/reviews/" + listing_id)
       ).json();
       console.log(data);
       setReviews(data);
