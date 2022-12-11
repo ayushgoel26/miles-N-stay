@@ -32,13 +32,13 @@ function NavbarHome(props) {
         className="col-sm-1 justify-content-end"
         id="basic-navbar-nav"
       >
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item mx-2">
-            <Link to="/addProperty">
+        <ul className="navbar-nav ml-auto">
+          <li className="nav-item mx-2">
+            <Link to="/allReservations">
               Show Reservations
             </Link>
           </li>
-          <li class="nav-item mx-2">
+          <li className="nav-item mx-2">
             <Link to="/addProperty">
               Become a Host
             </Link>
