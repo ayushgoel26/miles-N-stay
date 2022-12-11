@@ -7,7 +7,7 @@ function SearchBar() {
     <Form className="search">
       <Row className="px-5">
         <Col md="5" className="search-inputs">
-          <label for="location">
+          <label htmlFor="location">
             <div className="label">Location</div>
             <input
               type="text"
@@ -18,19 +18,19 @@ function SearchBar() {
           </label>
         </Col>
         <Col md="2" className="search-inputs">
-          <label for="check-in">
+          <label htmlFor="check-in">
             <div className="label">Check in</div>
             <input type="date" id="startDate" />
           </label>
         </Col>
         <Col md="2" className="search-inputs">
-          <label for="check-out">
+          <label htmlFor="check-out">
             <div className="label">Check out</div>
             <input type="date" id="endDate" />
           </label>
         </Col>
         <Col md="2" className="search-inputs">
-          <label for="guests">
+          <label htmlFor="guests">
             <div className="label">Guests</div>
             <div className="selectWrapper">
               <select className="selectBox" id="guest-count">

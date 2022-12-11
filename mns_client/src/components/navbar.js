@@ -3,7 +3,7 @@ import { Col } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import { BsFillQuestionCircleFill, BsPerson } from "react-icons/bs";
 import SignUpLoginModal from "./signUpLoginModal";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import "./navbar.css";
 import SearchBar from "./searchbar";
@@ -12,8 +12,11 @@ function NavbarHome(props) {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const openSignUpModal = () => setShowSignUpModal(true);
   const closeSignUpModal = () => setShowSignUpModal(false);
+
+  const location = useLocation().pathname;
+
   return (
-    <Navbar className="row" bg="light" expand="md" id="navbarmenu">
+    <Navbar className="row fix-top" bg="light" expand="md" id="navbarmenu">
       <Col sm="1" className="logo-div">
         <Navbar.Brand href="/">
           <img
@@ -24,7 +27,7 @@ function NavbarHome(props) {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
       </Col>
-      <Col sm="10">{!props.showHomePage && <SearchBar />}</Col>
+      <Col sm="10">{!(location === "/") && <SearchBar />}</Col>
       <Navbar.Collapse
         className="col-sm-1 justify-content-end"
         id="basic-navbar-nav"

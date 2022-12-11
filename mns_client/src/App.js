@@ -8,29 +8,17 @@ import AddPropertyForm from "./components/AddProperty/AddPropertyForm";
 import ListingDetails from "./components/ListingDetails";
 
 function App() {
-  const [showHomePage, setShowHomePage] = useState(true);
-  const [ListingsData, setListingsData] = useState([]);
   return (
     <Router>
       <div className="App">
-        <NavbarHome showHomePage={showHomePage}></NavbarHome>
-        {/* {showHomePage && (
-        <Homepage
-          setListingsData={setListingsData}
-          setShowHomePage={setShowHomePage}
-        />
-      )} */}
-      {/* {!showHomePage && <Listings data={ListingsData} />} */}
-      <Routes>
-      <Route exact path="/" element={<Homepage setListingsData={setListingsData}
-          setShowHomePage={setShowHomePage}/>} />
-      <Route path="/allProperties" element={<Listings setListingsData={setListingsData} ListingsData={ListingsData} />} />
-      <Route path="/addProperty" element={<AddPropertyForm/>} />
-      <Route path="/listingDetails" element={<ListingDetails/>} /> 
-      <Route path="/editProperty" element={<EditPropertyModal/>} /> 
-      </Routes>
-      
-    </div>
+        <NavbarHome></NavbarHome>
+        <Routes>
+          <Route exact path="/" element={<Homepage />} />
+          <Route path="/allProperties" element={<Listings />} />
+          <Route path="/addProperty" element={<AddPropertyForm />} />
+          <Route path="/listingDetails" element={<ListingDetails />} />
+        </Routes>
+      </div>
     </Router>
   );
 }
