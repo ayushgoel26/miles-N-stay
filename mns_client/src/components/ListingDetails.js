@@ -8,6 +8,7 @@ import {
 	Card,
 	CardMedia,
 	CardContent,
+	Chip,
 	Button,
 	Divider,
 	List,
@@ -19,11 +20,15 @@ import {
 	DialogTitle,
 	DialogContent,
 	DialogActions,
-} from "@material-ui/core";
+	makeStyles
+} from '@material-ui/core'
 
-import StarIcon from "@material-ui/icons/Star";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
-import { Rating } from "@material-ui/lab";
+import mongoose from 'mongoose'
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import { Rating } from '@material-ui/lab';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 function ListingDetails() {
 	const [property, setProperty] = useState(null);
@@ -57,25 +62,77 @@ function ListingDetails() {
 		reviewer: {
 			name: "Abhirup Bhattacharya",
 		},
-		property_id: "6393d4817fcee3470f65b6f4",
+		property_id: listing_id,
 		rating: 0,
 		comment: "",
 	};
 
-	const [reviewData, setReviewData] = useState(initial_review);
-	const [reviews, setReviews] = useState(null);
+	const [reviewData, setReviewData] = useState(initial_review)
+	const [reviews, setReviews] = useState(null)
+	const [wishlist, setWishList] = useState(null)
+	const [isFavorited, setIsFavorited] = useState(false);
+	const [wishFetched, setWishFetched] = useState(false)
+	//let isFavorited = false
 
 	useEffect(() => {
 		const dataFetch = async () => {
 			const data = await (
-				await fetch("http://localhost:3000/listings/" + listing_id)
+				await fetch(
+					"http://localhost:3000/listings/" + listing_id
+				)
 			).json();
-			// console.log(data)
+			console.log(data)
 			setProperty(data);
 
 		};
+
 		dataFetch();
 	}, []);
+
+	// useEffect(() => {
+	//   const wishlistFetch = async () => {
+	//     const data = await (
+	//       await fetch(
+	//         "http://localhost:3000/wishlist?prop_id=6393d4817fcee3470f65b6f4&guest_id=123"
+	//       )
+	//     ).json();
+	//     if(!data){
+	//     console.log("inside useeffect wishlist")
+	//     console.log(data)
+	//     }
+	//     if(data){
+	//     setWishList(data);
+	//       isFavorited = true
+	//     }
+	//     else{
+	//       isFavorited = false
+	//     }
+
+	//   };
+
+	//   wishlistFetch();
+	// }, []);
+
+	useEffect(() => {
+		// Fetch data from the API
+		fetch('http://localhost:3000/wishlist?prop_id=6393d4817fcee3470f65b6f4&guest_id=123')
+			.then((response) => response.json())
+			.then((json) => {
+				setWishFetched(true)
+				if (json) {
+					//isFavorited = true
+					setIsFavorited(true)
+					console.log("inside useeffect json")
+					setWishList(json)
+				} else {
+					//isFavorited = false
+					setIsFavorited(false)
+					setWishList(json)
+				}
+			});
+	}, []);
+
+
 
 	useEffect(() => {
 		const reviewFetch = async () => {
@@ -120,17 +177,68 @@ function ListingDetails() {
 	};
 	const [rating, setRating] = React.useState(0);
 
+
+
+
+	const handleClick = () => {
+		if (isFavorited) {
+			setIsFavorited(false)
+		}
+		else {
+			setIsFavorited(true)
+		}
+
+		console.log(isFavorited)
+
+		if (!isFavorited) {
+			const requestOptions = {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					guest_id: '123',
+					property_id: '6393d4817fcee3470f65b6f4'
+				}),
+			};
+			fetch("http://localhost:3000/wishlist/", requestOptions)
+				.then((response) => response.json())
+				.then((data) => console.log(data))
+				.catch((error) => console.log(error));
+		}
+
+		else {
+			fetch("http://localhost:3000/wishlist/delete?prop_id=6393d4817fcee3470f65b6f4&guest_id=123")
+				.then((response) => response.json())
+				.then((data) => console.log(data))
+				.catch((error) => console.log(error));
+		}
+
+
+	};
+
+
 	if (property && reviews) {
 		return (
+
+
 			<Container style={{ backgroundColor: "white" }}>
 				<Grid container spacing={2}>
-					<Grid
-						item
-						xs={12}
-						sm={12}
-						style={{ marginTop: "1%", marginBottom: "1%" }}
-					>
-						<Typography variant="h4">{property.property_name}</Typography>
+
+					<Grid item xs={12} sm={12} style={{ marginTop: "1%", marginBottom: "1%" }}>
+
+						<Typography variant="h4">{property.property_name}
+							<Button
+								variant="contained"
+								style={{ float: "right" }}
+								color={isFavorited ? 'secondary' : 'default'}
+								onClick={handleClick}
+								startIcon={isFavorited ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+							>
+								{isFavorited ? 'Remove from Favorites' : 'Add to Favorites'}
+							</Button>
+						</Typography>
+
+
+
 						<Card>
 							<CardMedia
 								component="img"
@@ -141,6 +249,7 @@ function ListingDetails() {
 								title={property.name}
 								style={{ margin: "1%" }}
 							/>
+
 						</Card>
 
 					</Grid>
