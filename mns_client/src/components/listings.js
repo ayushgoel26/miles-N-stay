@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import ListingsCardsRow from "./listingCardsRow";
 import { useLocation } from "react-router-dom";
 
