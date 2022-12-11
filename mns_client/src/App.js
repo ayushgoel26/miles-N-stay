@@ -20,22 +20,17 @@ function App() {
           setShowHomePage={setShowHomePage}
         />
       )} */}
-        {/* {!showHomePage && <Listings data={ListingsData} />} */}
-        <Routes>
-          <Route
-            exact
-            path="/"
-            element={
-              <Homepage
-                setListingsData={setListingsData}
-                setShowHomePage={setShowHomePage}
-              />
-            }
-          />
-          <Route path="/addProperty" element={<AddPropertyForm />} />
-          <Route path="/listingDetails" element={<ListingDetails />} />
-        </Routes>
-      </div>
+      {/* {!showHomePage && <Listings data={ListingsData} />} */}
+      <Routes>
+      <Route exact path="/" element={<Homepage setListingsData={setListingsData}
+          setShowHomePage={setShowHomePage}/>} />
+      <Route path="/allProperties" element={<Listings setListingsData={setListingsData} ListingsData={ListingsData} />} />
+      <Route path="/addProperty" element={<AddPropertyForm/>} />
+      <Route path="/listingDetails" element={<ListingDetails/>} /> 
+      <Route path="/editProperty" element={<EditPropertyModal/>} /> 
+      </Routes>
+      
+    </div>
     </Router>
   );
 }
