@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import {
 	Container,
@@ -33,6 +33,7 @@ function ListingDetails() {
 	const [endDate, setEndDate] = useState(new Date());
 	const location = useLocation();
 	const listing_id = location.state.from;
+	const navigate = useNavigate();
 
 	const startDateChange = (e) => {
 		console.log(`${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate() + 1}`)
@@ -107,7 +108,10 @@ function ListingDetails() {
 		dataFetch();
 	}, []);
 
+
 	useEffect(() => {
+		// Fetch data from the API
+		fetch('http://localhost:3000/wishlist?prop_id=' + listing_id + '&guest_id=123')
 		fetch('http://localhost:3000/wishlist?prop_id=6393d4817fcee3470f65b6f4&guest_id=123')
 			.then((response) => response.json())
 			.then((json) => {
@@ -153,6 +157,7 @@ function ListingDetails() {
 		fetch("http://localhost:3000/listings/reviews", requestOptions)
 			.then((response) => response.json())
 			.then((data) => console.log(data))
+			.then(navigate(0))
 			.catch((error) => console.log(error));
 		setOpen(false);
 	};
@@ -178,7 +183,7 @@ function ListingDetails() {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					guest_id: '123',
-					property_id: '6393d4817fcee3470f65b6f4'
+					property_id: listing_id
 				}),
 			};
 			fetch("http://localhost:3000/wishlist/", requestOptions)
@@ -188,7 +193,7 @@ function ListingDetails() {
 		}
 
 		else {
-			fetch("http://localhost:3000/wishlist/delete?prop_id=6393d4817fcee3470f65b6f4&guest_id=123")
+			fetch("http://localhost:3000/wishlist/delete?prop_id=" + listing_id + "&guest_id=123")
 				.then((response) => response.json())
 				.then((data) => console.log(data))
 				.catch((error) => console.log(error));
@@ -537,6 +542,7 @@ function ListingDetails() {
 			</Container>
 		);
 	}
+
 }
 
 export default ListingDetails;

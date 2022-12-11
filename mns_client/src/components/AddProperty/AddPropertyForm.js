@@ -6,6 +6,9 @@ import PropertyPrice from './PropertyPrice';
 import PropertyRules from './PropertyRules';
 import GuestRequirements from './GuestRequirements';
 import mongoose from 'mongoose'
+import {
+  Divider, Typography, Grid
+} from '@material-ui/core'
 
 function AddPropertyForm() {
 
@@ -34,8 +37,8 @@ function AddPropertyForm() {
 
 
     house_rules: {
-      check_in: 12*60,
-      check_out: 12*60,
+      check_in: 12 * 60,
+      check_out: 12 * 60,
       check_in_type: "",
       smoking: false,
       parties: false,
@@ -56,11 +59,11 @@ function AddPropertyForm() {
     ],
 
     amenities: {
-      swimming_pool:false,
-      garden:false,
-      natural_gas_barbeque:false,
-      sun_lounger:false,
-      television:false
+      swimming_pool: false,
+      garden: false,
+      natural_gas_barbeque: false,
+      sun_lounger: false,
+      television: false
     },
 
   });
@@ -117,8 +120,14 @@ function AddPropertyForm() {
   return (
     <div className='form'>
       <div className="form-container">
-        <div className="header">
-          <h1>Add A New Property</h1>
+        <div className="header" style={{ marginTop: "1%", marginBotto: "1%" }}>
+          <Grid>
+            <Grid item>
+              <Typography style={{ justify: "center" }} variant="h3">Add A New Property</Typography>
+            </Grid>
+            <Grid item>
+            </Grid>
+          </Grid>
         </div>
         <div className="body">{PageDisplay(0)}</div>
         <div className="body">{PageDisplay(1)}</div>
@@ -128,15 +137,10 @@ function AddPropertyForm() {
         <div className="body">{PageDisplay(5)}</div>
         <div className="footer">
           <button
-            disabled={page === 0}
+            styles={{ borderRadius: "50%" }}
             onClick={() => {
-              setPage((currPage) => currPage - 1)
-
-            }}>Prev</button>
-          <button
-            onClick={() => {
-                window.alert("Submitting now")
-                handleSubmit()
+              window.alert("Submitting now")
+              handleSubmit()
             }}>
             Submit
           </button>

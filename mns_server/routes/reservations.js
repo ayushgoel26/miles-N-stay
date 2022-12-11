@@ -5,6 +5,13 @@ const ReservationSchema = require("../mongo_schemas/ReservationSchema")
 var router = express.Router();
 const mongoDB = "mongodb://localhost:27017/milesNstay";
 
+
+const moment = require('moment')
+
+const currDate = new Date().toISOString().substring(0, 10)
+
+console.log(currDate)
+
 mongoose.connect(mongoDB).then((dbo) => {
     console.log("DB connected")
 }, (err) => {
@@ -12,9 +19,10 @@ mongoose.connect(mongoDB).then((dbo) => {
     console.error(err)
 });
 const Reservations = mongoose.model("reservations", ReservationSchema);
+// const currDate = new Date(Date.now)
 
 router.get('/', (req, res) => {
-    Reservations.find(
+    Reservations.findById(
         {},
         (err, reservations) => {
             if (err) {
@@ -110,5 +118,70 @@ router.delete('/:id', (req, res) => {
         }
     );
 });
+
+
+router.get('/upcoming/:id', (req, res) => {
+    const { id } = req.params
+    Reservations.find(
+        {
+            "host_id": id,
+            "start_date": {
+                "$gt": currDate
+            }
+        },
+        (err, reservations) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(reservations);
+            }
+            return;
+        }
+    );
+});
+
+router.get('/past/:id', (req, res) => {
+    const { id } = req.params
+    Reservations.find(
+        {
+            "host_id": id,
+            "end_date": {
+                "$lt": currDate
+            }
+        },
+        (err, reservations) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(reservations);
+            }
+            return;
+        }
+    );
+});
+
+router.get('/current/:id', (req, res) => {
+    const { id } = req.params
+    Reservations.find(
+        {
+            "host_id": id,
+            "start_date": {
+                "$lte": currDate
+            },
+            "end_date": {
+                "$gte": currDate
+            }
+        },
+        (err, reservations) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(reservations);
+            }
+            return;
+        }
+    );
+});
+
 
 module.exports = router;

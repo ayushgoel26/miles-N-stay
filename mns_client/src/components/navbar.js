@@ -3,7 +3,7 @@ import { Col } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import { BsFillQuestionCircleFill, BsPerson } from "react-icons/bs";
 import SignUpLoginModal from "./signUpLoginModal";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import "./navbar.css";
 import SearchBar from "./searchbar";
@@ -14,6 +14,20 @@ function NavbarHome() {
   const closeSignUpModal = () => setShowSignUpModal(false);
 
   const location = useLocation().pathname;
+  const navigate = useNavigate();
+
+  function handleClick(event) {
+    // Prevent the default link behavior
+    event.preventDefault();
+
+    // Ask the user for confirmation
+    if (window.confirm("Are you sure you want to become a host?")) {
+      // If the user confirms, navigate to the new location
+      navigate('/addProperty');
+    }
+  }
+
+
 
   return (
     <Navbar className="row fix-top" bg="light" expand="md" id="navbarmenu">
@@ -41,7 +55,7 @@ function NavbarHome() {
             </Link>
           </li>
           <li className="nav-item mx-2">
-            <Link to="/addProperty">
+            <Link to="/addProperty" onClick={handleClick}>
               Become a Host
             </Link>
           </li>
