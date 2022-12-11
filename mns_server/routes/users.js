@@ -3,7 +3,6 @@ const multer = require("multer");
 var express = require("express");
 var router = express.Router();
 const UserSchema = require("../mongo_schemas/UserSchema");
-const axios = require("axios");
 
 const mongoDB = "mongodb://localhost:27017/milesNstay";
 const upload = multer({ dest: "assets/uploads/verifications" });
@@ -18,9 +17,10 @@ mongoose.connect(mongoDB).then(
   }
 );
 
+const user = mongoose.model("user", UserSchema);
+
 /*Post the Sign Up Form*/
 router.post("/signup", upload.single("file"), async function (req, res) {
-  const user = mongoose.model("user", UserSchema);
   data = JSON.parse(req.body.data);
   if (req.file) {
     data["govt_id_url"] = req.file.path;
@@ -39,32 +39,50 @@ router.post("/signup", upload.single("file"), async function (req, res) {
 });
 
 router.get("/:type/:value", function (req, res) {
-  const user = mongoose.model("user", UserSchema);
-  key = req.params.type
-  let mongo_find_query = {}
-  if (key === 'username') {
-    mongo_find_query = { username : req.params.value }
-  } else if (key === 'email') {
-    mongo_find_query = { email : req.params.value }
+  key = req.params.type;
+  let mongo_find_query = {};
+  if (key === "username") {
+    mongo_find_query = { username: req.params.value };
+  } else if (key === "email") {
+    mongo_find_query = { email: req.params.value };
   } else {
-    if (key === 'phone') {
-      mongo_find_query = { phone : req.params.value }
+    if (key === "phone") {
+      mongo_find_query = { phone: req.params.value };
     }
   }
-  user.find(
-    mongo_find_query,
-    (err, user_data) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
+  user.find(mongo_find_query, (err, user_data) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    if (user_data.length == 0) {
+      res.json("does not exists");
+    } else {
+      res.json("exists");
+    }
+  });
+});
+
+router.post("/", function (req, res) {
+  console.log(req.body);
+  data = req.body;
+  console.log(data.username);
+  user.find({ user: data.username }, (err, user_data) => {
+    if (err) {
+      console.log(err);
+      return err;
+    } else {
       if (user_data.length == 0) {
-        res.json("does not exists");
+        res.json("login failed");
       } else {
-        res.json("exists");
+        if (data.password === user_data[0].password) {
+          res.json("login successful");
+        } else {
+          res.json("login failed");
+        }
       }
     }
-  );
+  });
 });
 
 module.exports = router;

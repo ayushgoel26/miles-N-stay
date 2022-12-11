@@ -29,18 +29,18 @@ function NavbarHome(props) {
         className="col-sm-1 justify-content-end"
         id="basic-navbar-nav"
       >
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item mx-2">
+        <ul className="navbar-nav ml-auto">
+          <li className="nav-item mx-2">
             <Link to="/addProperty">Become a Host</Link>
           </li>
-          <li class="nav-item mx-2">
+          <li className="nav-item mx-2">
             <Link to="/">
               <BsFillQuestionCircleFill
                 style={{ width: "2em", height: "2em" }}
               />
             </Link>
           </li>
-          <li class="nav-item mx-2">
+          <li className="nav-item mx-2">
             <BsPerson
               onClick={openSignUpModal}
               style={{ width: "2em", height: "2em" }}

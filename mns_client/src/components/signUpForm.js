@@ -7,6 +7,10 @@ import md5 from "md5";
 
 function SignUpForm(props) {
   var errorFlag;
+  var emailErrorFlag;
+  var phoneErrorFlag;
+  var userErrorFlag;
+  var passwordErrorFlag;
   var formDataInitialState = {
     username: "",
     password: "",
@@ -33,6 +37,7 @@ function SignUpForm(props) {
   };
   const [formData, setFormData] = useState(formDataInitialState);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [govID, setGovID] = useState("");
 
   const validate_field = (field, field_name) => {
@@ -49,45 +54,42 @@ function SignUpForm(props) {
   };
 
   const checkPhoneNum = (e) => {
+    phoneErrorFlag = false;
     if (formData.contact.phone !== "") {
-      console.log(`in check phone num ${formData.contact.phone}`);
       fetch(`http://localhost:3000/users/phone/${formData.contact.phone}`)
         .then((response) => response.json())
         .then((data) => {
           if (data === "exists") {
-            errorFlag = false;
+            phoneErrorFlag = true;
             document.getElementById("phone_num_exists").style.display =
               "inline";
             document.getElementById("phone_number").style.border =
               "2px solid red";
-          } else {
-            errorFlag = true;
           }
         });
     }
   };
 
   const checkEmail = (e) => {
+    emailErrorFlag = false;
     if (formData.contact.email !== "") {
-      console.log(`in check email ${formData.contact.email}`);
       fetch(`http://localhost:3000/users/email/${formData.contact.email}`)
         .then((response) => response.json())
         .then((data) => {
           if (data === "exists") {
-            errorFlag = false;
+            emailErrorFlag = true;
             document.getElementById("email_exists").style.display = "inline";
             document.getElementById("email").style.border = "2px solid red";
-          } else {
-            errorFlag = true;
           }
         });
     }
   };
 
   const checkUsername = (e) => {
+    userErrorFlag = false;
     if (formData.username !== "") {
       if (formData.username.length < 6) {
-        errorFlag = true;
+        userErrorFlag = true;
         var error = document.getElementById("username_length_error");
         error.style.display = "inline";
         document.getElementById("username").style.border = "2px solid red";
@@ -99,34 +101,30 @@ function SignUpForm(props) {
           .then((response) => response.json())
           .then((data) => {
             if (data === "exists") {
-              errorFlag = true;
+              userErrorFlag = true;
               document.getElementById("username_exists").style.display =
                 "inline";
               document.getElementById("username").style.border =
                 "2px solid red";
-            } else {
-              errorFlag = false;
             }
           });
       }
     }
   };
 
-  const checkPassword = (e) => {
-    if (formData.password !== "") {
+  const checkPassword = (password) => {
+    passwordErrorFlag = false;
+    if (password !== "") {
       // Regular expression that checks for at least 6 characters,
       // at least one uppercase letter, one lowercase letter,
       // one number, and one special character
       const regex =
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-      const isValid = regex.test(formData.password);
-
+      const isValid = regex.test(password);
       if (!isValid) {
-        errorFlag = true;
+        passwordErrorFlag = true;
         document.getElementById("password_req").style.display = "inline";
         document.getElementById("password").style.border = "2px solid red";
-      } else {
-        errorFlag = false;
       }
     }
   };
@@ -160,13 +158,25 @@ function SignUpForm(props) {
     validate_field(formData.gender, "gender");
   };
 
-  const submitHandler = async (event) => {
+  const submitHandler = (event) => {
     event.preventDefault();
     validate_form();
+    checkEmail(formData.email);
+    checkPhoneNum(formData.contact.phone);
+    checkPassword(password);
+    checkUsername(formData.username);
     const Data = new FormData();
     Data.append("file", govID);
     Data.append("data", JSON.stringify(formData));
-    if (!errorFlag) {
+    if (
+      !(
+        errorFlag ||
+        phoneErrorFlag ||
+        emailErrorFlag ||
+        userErrorFlag ||
+        passwordErrorFlag
+      )
+    ) {
       const requestOptions = {
         method: "POST",
         body: Data,
@@ -525,13 +535,17 @@ function SignUpForm(props) {
               id="password"
               placeholder="Password *"
               onBlur={(e) => checkPassword(e.target.value)}
-              onFocus={(e) => on_focus_error(e)}
-              onChange={(e) =>
+              onFocus={(e) => {
+                on_focus_error(e);
+                document.getElementById("password_req").style.display = "none";
+              }}
+              onChange={(e) => {
                 setFormData({
                   ...formData,
                   password: md5(e.target.value),
-                })
-              }
+                });
+                setPassword(e.target.value);
+              }}
             />
             <Form.Text className="error" id="password_error">
               Please enter Password
@@ -597,7 +611,9 @@ function SignUpForm(props) {
           </Form.Group>
         </Col>
       </Row>
-      <Button type="submit">Sign Up</Button>
+      <Row className="justify-content-center mx-3">
+        <Button type="submit">Sign Up</Button>
+      </Row>
     </Form>
   );
 }
