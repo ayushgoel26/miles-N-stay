@@ -73,7 +73,6 @@ function ListingDetails() {
       setProperty(data);
 
     };
-
     dataFetch();
   }, []);
 
@@ -85,33 +84,40 @@ function ListingDetails() {
       console.log(data);
       setReviews(data);
     };
+    reviewFetch();
+  }, []);
 
-    const handleClose = () => {
-      //const formData1 = new FormData();
-      //formData1.append('property_name', 'Mi Casa');
-      //formData1.append('property_type', 'Boat');
+  const [open, setOpen] = React.useState(false);
+
+	const handleClickOpen = () => {
+		setOpen(true);
+	};
+  
+  const handleClose = () => {
+    //const formData1 = new FormData();
+    //formData1.append('property_name', 'Mi Casa');
+    //formData1.append('property_type', 'Boat');
 
 
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reviewData),
-      };
-      fetch("http://localhost:3000/listings/reviews", requestOptions)
-        .then((response) => response.json())
-        .then((data) => console.log(data))
-        .catch((error) => console.log(error));
-
-      setOpen(false);
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(reviewData),
     };
+    fetch("http://localhost:3000/listings/reviews", requestOptions)
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.log(error));
 
-    // console.log(property)
-    const handleRating = (newRating) => {
-      setRating(newRating);
-      setReviewData({ ...reviewData, rating: newRating })
-    };
-    const [rating, setRating] = React.useState(0);
-    //   const classes = useStyles();
+    setOpen(false);
+  };
+
+  // console.log(property)
+  const handleRating = (newRating) => {
+    setRating(newRating);
+    setReviewData({ ...reviewData, rating: newRating })
+  };
+  const [rating, setRating] = React.useState(0);
 
   if (property && reviews) {
     return (
