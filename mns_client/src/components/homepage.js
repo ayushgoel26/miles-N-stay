@@ -13,7 +13,7 @@ import CarouselMulti from "./carousel";
 //   console.log(`City: ${city}, Country: ${country}`);
 // };
 
-function Homepage(props) {
+function Homepage() {
   // let pos = [38.889248, -77.050636];
 
   // if (navigator.geolocation) {
@@ -40,10 +40,7 @@ function Homepage(props) {
   return (
     <div>
       <div className="jumbotron jumbotron-fluid" id="welcome-div">
-        <Search
-          dataSetter={props.setListingsData}
-          setShowHomePage={props.setShowHomePage}
-        />
+        <Search />
       </div>
       <CarouselMulti></CarouselMulti>
     </div>
