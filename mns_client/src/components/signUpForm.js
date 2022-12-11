@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import { Country, State, City } from "country-state-city";
 import "../stylesheets/signUpModal.css";
 import md5 from "md5";
+import { ReactSession } from "react-client-session";
 
 function SignUpForm(props) {
   var errorFlag;
@@ -184,7 +185,13 @@ function SignUpForm(props) {
 
       fetch("http://localhost:3000/users/signup", requestOptions)
         .then((response) => response.json())
-        .then((data) => console.log(data));
+        .then((data) => {
+          ReactSession.set("id", data._id);
+          ReactSession.set("username", data.username);
+          ReactSession.set("first_name", data.name.first_name);
+          ReactSession.set("last_name", data.name.last_name);
+          ReactSession.set("is_host", data.is_host);
+        });
       setFormData(formDataInitialState);
       setConfirmPassword("");
       setGovID("");

@@ -25,16 +25,13 @@ router.post("/signup", upload.single("file"), async function (req, res) {
   if (req.file) {
     data["govt_id_url"] = req.file.path;
   }
-  // const response = await axios.get(
-  //   "https://nominatim.openstreetmap.org/search?country=" + data.address.country
-  // );
-  // console.log(response.data);
   user.create(data, (err) => {
     if (err) {
       console.log(err);
       return res.status(500).send(err);
     }
-    res.json("success");
+    console.log(data);
+    res.json(data);
   });
 });
 
@@ -44,17 +41,19 @@ router.get("/:type/:value", function (req, res) {
   if (key === "username") {
     mongo_find_query = { username: req.params.value };
   } else if (key === "email") {
-    mongo_find_query = { email: req.params.value };
+    mongo_find_query = { "contact.email": req.params.value };
   } else {
     if (key === "phone") {
-      mongo_find_query = { phone: req.params.value };
+      mongo_find_query = { "contact.phone": req.params.value };
     }
   }
+  console.log(mongo_find_query);
   user.find(mongo_find_query, (err, user_data) => {
     if (err) {
       console.log(err);
       return;
     }
+    console.log(user_data);
     if (user_data.length == 0) {
       res.json("does not exists");
     } else {
@@ -67,7 +66,7 @@ router.post("/", function (req, res) {
   console.log(req.body);
   data = req.body;
   console.log(data.username);
-  user.find({ user: data.username }, (err, user_data) => {
+  user.find({ username: data.username }, (err, user_data) => {
     if (err) {
       console.log(err);
       return err;
@@ -76,7 +75,8 @@ router.post("/", function (req, res) {
         res.json("login failed");
       } else {
         if (data.password === user_data[0].password) {
-          res.json("login successful");
+          console.log(user_data);
+          res.json(user_data[0]);
         } else {
           res.json("login failed");
         }
