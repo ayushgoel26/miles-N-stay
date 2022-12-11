@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Form, Row, Button, Card } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 
-function Search(props) {
+function Search() {
   const searchParams = new URLSearchParams();
   const [city, setCity] = useState("");
   const [type, setType] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const navigate = useNavigate();
   const formSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -35,24 +37,27 @@ function Search(props) {
         : api_url + "?" + searchParams.toString();
       console.log(url);
       let listings = await fetch(url);
-      let listingsData = await listings.json();
-      props.dataSetter(listingsData);
-      props.setShowHomePage(false);
+      let data = await listings.json();
+      navigate("/allProperties", {
+        state: {
+          data,
+        },
+      });
     } catch (err) {
       console.log(err);
     }
   };
-  const browseAll = async (e) => {
-    e.preventDefault();
-    try {
-      let api_url = "http://localhost:3000/listings";
-      let listings = await fetch(api_url);
-      let listingsData = await listings.json();
-      props.dataSetter(listingsData);
-      props.setShowHomePage(false);
-    } catch (err) {
-      console.log(err);
-    }
+
+  const fetchData = () => {
+    fetch("http://localhost:3000/listings/")
+      .then((response) => response.json())
+      .then((data) =>
+        navigate("/allProperties", {
+          state: {
+            data,
+          },
+        })
+      );
   };
 
   return (
@@ -123,10 +128,7 @@ function Search(props) {
             <p className="text-muted">
               {" "}
               <b>
-                Not sure where to go?{" "}
-                <a href="/" onClick={browseAll}>
-                  Browse here!
-                </a>
+                Not sure where to go? <a onClick={fetchData}>Browse here!</a>
               </b>
             </p>
           </Form.Group>

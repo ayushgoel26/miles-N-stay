@@ -1,12 +1,30 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import NavbarHome from "./components/navbar";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Listings from "./components/listings";
+import Homepage from "./components/homepage";
+import AddPropertyForm from "./components/AddProperty/AddPropertyForm";
+import ListingDetails from "./components/ListingDetails";
+import Reservations from "./components/reservations";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
+    <Router>
+      <NavbarHome></NavbarHome>
+      <Routes>
+        <Route exact path="/" element={<Homepage />} />
+        <Route path="/allProperties" element={<Listings />} />
+        <Route path="/addProperty" element={<AddPropertyForm />} />
+        <Route path="/listingDetails" element={<ListingDetails />} />
+        <Route path="/allReservations" element={<Reservations />} />
+      </Routes>
+    </Router>
     <App />
   </React.StrictMode>
 );

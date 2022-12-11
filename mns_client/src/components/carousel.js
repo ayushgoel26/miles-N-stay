@@ -26,12 +26,7 @@ function CarouselMulti(props) {
           <Card className="card-carousel">
             <Card.Img className="rounded" variant="top" src={"img/jbnu2.jpg"} />
             <Card.Body>
-              <Card.Text>
-                <h3>First slide label</h3>
-                <p>
-                  Nulla vitae elit libero, a pharetra augue mollis interdum.
-                </p>
-              </Card.Text>
+              <Card.Text></Card.Text>
             </Card.Body>
           </Card>
         </Col>
@@ -41,12 +36,7 @@ function CarouselMulti(props) {
           <Card className="card-carousel">
             <Card.Img className="rounded" variant="top" src={"img/jbnu2.jpg"} />
             <Card.Body>
-              <Card.Text>
-                <h3>Second slide label</h3>
-                <p>
-                  Nulla vitae elit libero, a pharetra augue mollis interdum.
-                </p>
-              </Card.Text>
+              <Card.Text></Card.Text>
             </Card.Body>
           </Card>
         </Col>
@@ -56,12 +46,7 @@ function CarouselMulti(props) {
           <Card className="card-carousel">
             <Card.Img className="rounded" variant="top" src={"img/jbnu2.jpg"} />
             <Card.Body>
-              <Card.Text>
-                <h3>Third slide label</h3>
-                <p>
-                  Nulla vitae elit libero, a pharetra augue mollis interdum.
-                </p>
-              </Card.Text>
+              <Card.Text></Card.Text>
             </Card.Body>
           </Card>
         </Col>
@@ -71,12 +56,7 @@ function CarouselMulti(props) {
           <Card className="card-carousel">
             <Card.Img className="rounded" variant="top" src={"img/jbnu2.jpg"} />
             <Card.Body>
-              <Card.Text>
-                <h3>Four slide label</h3>
-                <p>
-                  Nulla vitae elit libero, a pharetra augue mollis interdum.
-                </p>
-              </Card.Text>
+              <Card.Text></Card.Text>
             </Card.Body>
           </Card>
         </Col>
@@ -86,12 +66,7 @@ function CarouselMulti(props) {
           <Card className="card-carousel">
             <Card.Img className="rounded" variant="top" src={"img/jbnu2.jpg"} />
             <Card.Body>
-              <Card.Text>
-                <h3>Fifth slide label</h3>
-                <p>
-                  Nulla vitae elit libero, a pharetra augue mollis interdum.
-                </p>
-              </Card.Text>
+              <Card.Text></Card.Text>
             </Card.Body>
           </Card>
         </Col>
