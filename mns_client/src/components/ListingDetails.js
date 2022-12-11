@@ -35,13 +35,14 @@ function ListingDetails() {
 
   const reserve = () => {
     let requestBody = {
-      start_date: startDate,
-      end_date: endDate,
-      status: "pending",
-      host_id: property.host_id,
-      guest_id: property.host_id,
-      property_id: property._id,
-    };
+      "start_date": startDate,
+      "end_date": endDate,
+      "status": "pending",
+      "host_id": property.host_id,
+      "guest_id": property.host_id,
+      "property_id": property._id,
+      "property_name": property.property_name
+    }
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,39 +86,32 @@ function ListingDetails() {
       setReviews(data);
     };
 
-    reviewFetch();
-  }, []);
+    const handleClose = () => {
+      //const formData1 = new FormData();
+      //formData1.append('property_name', 'Mi Casa');
+      //formData1.append('property_type', 'Boat');
 
-  const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reviewData),
+      };
+      fetch("http://localhost:3000/listings/reviews", requestOptions)
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((error) => console.log(error));
 
-  const handleClose = () => {
-    //const formData1 = new FormData();
-    //formData1.append('property_name', 'Mi Casa');
-    //formData1.append('property_type', 'Boat');
-
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(reviewData),
+      setOpen(false);
     };
-    fetch("http://localhost:3000/listings/reviews", requestOptions)
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
 
-    setOpen(false);
-  };
-
-  const handleRating = (newRating) => {
-    setRating(newRating);
-    setReviewData({ ...reviewData, rating: newRating })
-  };
-  const [rating, setRating] = React.useState(0);
-  setOpen(false);
+    // console.log(property)
+    const handleRating = (newRating) => {
+      setRating(newRating);
+      setReviewData({ ...reviewData, rating: newRating })
+    };
+    const [rating, setRating] = React.useState(0);
+    //   const classes = useStyles();
 
   if (property && reviews) {
     return (
