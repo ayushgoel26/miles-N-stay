@@ -12,14 +12,9 @@ mongoose.connect(mongoDB).then((dbo) => {
     console.error(err)
 });
 
-// const validate_json_key = (key, jsonData, isRequired) ={
-//     if (jsonData[key]) {
-//         jsonData[key] = mongoose.Types.ObjectId(req.body['host_id'])
-//         return jsonData
-//     } else {
-//         return res.status(500).send({'error': 'host_id is required'})
-//     }
-// }
+router.get('/', (req, res) => {
+    
+});
 
 router.post('/', (req, res) => {
     const Reservations = mongoose.model("reservations", ReservationSchema);
