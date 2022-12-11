@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 import {
   Container,
@@ -29,6 +30,9 @@ function ListingDetails() {
   const [startDate, setStartDate] = useState(new Date().getDate());
   const [endDate, setEndDate] = useState(new Date().getDate() + 1);
 
+  const location = useLocation();
+  const listing_id = location.state.from;
+
   const reserve = () => {
     let requestBody = {
       "start_date": startDate,
@@ -46,56 +50,40 @@ function ListingDetails() {
     };
     fetch("http://localhost:3000/reservations/", requestOptions)
       .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
-  }
-    const initial_review = {
-      reviewer: {
-        name: "Abhirup Bhattacharya"
-      },
-      property_id: '6393d4817fcee3470f65b6f4',
-      rating: 0,
-      comment: ""
-    }
+      .then((data) => console.log(data));
+  };
+  const initial_review = {
+    reviewer: {
+      name: "Abhirup Bhattacharya",
+    },
+    property_id: "6393d4817fcee3470f65b6f4",
+    rating: 0,
+    comment: "",
+  };
 
-    const [reviewData, setReviewData] = useState(initial_review)
-    const [reviews, setReviews] = useState(null)
+  const [reviewData, setReviewData] = useState(initial_review);
+  const [reviews, setReviews] = useState(null);
 
-    useEffect(() => {
-      const dataFetch = async () => {
-        const data = await (
-          await fetch(
-            "http://localhost:3000/listings/6393d4817fcee3470f65b6f4"
-          )
-        ).json();
-        // console.log(data)
-        setProperty(data);
+  useEffect(() => {
+    const dataFetch = async () => {
+      const data = await (
+        await fetch("http://localhost:3000/listings/" + listing_id)
+      ).json();
+      // console.log(data)
+      setProperty(data);
 
-      };
+    };
 
-      dataFetch();
-    }, []);
+    dataFetch();
+  }, []);
 
-
-    useEffect(() => {
-      const reviewFetch = async () => {
-        const data = await (
-          await fetch(
-            "http://localhost:3000/listings/reviews/6393d4817fcee3470f65b6f4"
-          )
-        ).json();
-        console.log(data)
-        setReviews(data);
-
-      };
-
-      reviewFetch();
-    }, []);
-
-    const [open, setOpen] = React.useState(false);
-
-    const handleClickOpen = () => {
-      setOpen(true);
+  useEffect(() => {
+    const reviewFetch = async () => {
+      const data = await (
+        await fetch("http://localhost:3000/listings/reviews/" + listing_id)
+      ).json();
+      console.log(data);
+      setReviews(data);
     };
 
     const handleClose = () => {
