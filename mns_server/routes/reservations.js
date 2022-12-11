@@ -60,41 +60,41 @@ router.post('/', (req, res) => {
         return res.status(500).send({ 'error': 'property_id is required' })
     }
 
-
-    // Find documents in the collection where the date range overlaps with the input range
-    Model.find({
-        $and: [
-            {
-                $or: [
-                    // The start date of the input range falls within the document's date range
-                    { start_date: { $lte: req.body.start_date }, end_date: { $gte: req.body.start_date } },
-                    // The end date of the input range falls within the document's date range
-                    { start_date: { $lte: req.body.end_date }, end_date: { $gte: req.body.end_date } },
-                    // The input range completely encloses the document's date range
-                    { start_date: { $gte: start_date }, end_date: { $lte: end_date } },
-                ],
-            },
-            // The document's date range completely encloses the input range
-            { start_date: { $lte: start_date }, end_date: { $gte: end_date } },
+    console.log(req.body)
+    startDate = req.body.start_date;
+    endDate = req.body.end_date;
+    isAvailable = true
+    Reservations.find({
+        $or: [
+            { start_date: { $lte: startDate }, end_date: { $gte: startDate } },
+            { start_date: { $lte: endDate }, end_date: { $gte: endDate } },
+            { start_date: { $gte: startDate }, end_date: { $lte: endDate } },
+            { start_date: { $lte: startDate }, end_date: { $gte: endDate } },
         ],
     })
         .then((docs) => {
+            console.log('--------')
             console.log(docs)
-            // Do something with the matching documents
+            if (docs.length > 0) {
+                isAvailable = !isAvailable
+                return res.status(500).send({ 'msg': 'Dates not available' })
+            }
+        }).then(() => {
+            if (isAvailable) {
+                Reservations.create(req.body, (err, reservation) => {
+                    if (err) {
+                        return res.status(500).send(err)
+                    }
+                    console.log(`reservation created [${reservation._id}]`)
+                    return res.status(200).send({ 'msg': 'Reservation successful' })
+                });
+            }
         })
         .catch((err) => {
             console.log(err)
-            // Handle any errors
+            return res.status(500).send({ 'msg': err })
         });
 
-    console.log(req.body)
-    Reservations.create(req.body, (err, reservation) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).send(err)
-        }
-        res.send({ 'id': reservation._id })
-    });
 });
 
 router.delete('/:id', (req, res) => {

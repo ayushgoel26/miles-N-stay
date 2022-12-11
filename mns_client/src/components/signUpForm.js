@@ -87,14 +87,15 @@ function SignUpForm(props) {
 
   const checkUsername = (e) => {
     userErrorFlag = false;
+    var error;
     if (formData.username !== "") {
       if (formData.username.length < 6) {
         userErrorFlag = true;
-        var error = document.getElementById("username_length_error");
+        error = document.getElementById("username_length_error");
         error.style.display = "inline";
         document.getElementById("username").style.border = "2px solid red";
       } else {
-        var error = document.getElementById("username_length_error");
+        error = document.getElementById("username_length_error");
         error.style.display = "none";
         document.getElementById("username").style.border = "1px solid #ced4da";
         fetch(`http://localhost:3000/users/username/${formData.username}`)
