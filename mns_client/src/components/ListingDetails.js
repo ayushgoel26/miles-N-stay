@@ -98,13 +98,10 @@ function ListingDetails() {
 	useEffect(() => {
 		const dataFetch = async () => {
 			const data = await (
-				await fetch(
-					"http://localhost:3000/listings/" + listing_id
-				)
+				await fetch("http://localhost:3000/listings/" + listing_id)
 			).json();
-			console.log(data)
+			console.log(data);
 			setProperty(data);
-
 		};
 
 		dataFetch();
@@ -168,13 +165,12 @@ function ListingDetails() {
 
 	const handleClick = () => {
 		if (isFavorited) {
-			setIsFavorited(false)
-		}
-		else {
-			setIsFavorited(true)
+			setIsFavorited(false);
+		} else {
+			setIsFavorited(true);
 		}
 
-		console.log(isFavorited)
+		console.log(isFavorited);
 
 		if (!isFavorited) {
 			const requestOptions = {
@@ -225,14 +221,11 @@ function ListingDetails() {
 								component="img"
 								alt={property.name}
 								height="380"
-								// image={property.image}
-								image="https://www.rocketmortgage.com/resources-cmsassets/RocketMortgage.com/Article_Images/Large_Images/TypesOfHomes/types-of-homes-hero.jpg"
+								image={`img/propertyImages${property.images[0]}`}
 								title={property.name}
 								style={{ margin: "1%" }}
 							/>
-
 						</Card>
-
 					</Grid>
 				</Grid>
 
@@ -311,35 +304,33 @@ function ListingDetails() {
 									>
 										Book your stay
 									</Typography>
-
 									<Grid container spacing={2}>
 										<Grid item xs={12} sm={6}>
 											<TextField
 												id="checkin-date"
 												label="Check-in date"
+												value={startDate}
 												type="date"
 												variant="filled"
 												fullWidth
-												// defaultValue={`${new Date().getMonth()}/${new Date().getDate() + 1}/${new Date().getFullYear()}`}
 												InputLabelProps={{
 													shrink: true,
 												}}
-												onChange={(e) => startDateChange(e)}
+												onChange={(e) => setStartDate(e.target.value)}
 											/>
 										</Grid>
 										<Grid item xs={12} sm={6}>
 											<TextField
 												id="checkout-date"
+												value={endDate}
 												label="Check-out date"
 												type="date"
-												min="2022-12-13"
 												variant="filled"
 												fullWidth
-												// defaultValue={`${new Date().getMonth()}/${new Date().getDate() + 2}/${new Date().getFullYear()}`}
 												InputLabelProps={{
 													shrink: true,
 												}}
-												onChange={(e) => endDateChange(e)}
+												onChange={(e) => setEndDate(e.target.value)}
 											/>
 										</Grid>
 									</Grid>
@@ -451,9 +442,9 @@ function ListingDetails() {
 								<Dialog open={open} onClose={handleClose}>
 									<DialogTitle>Add Review</DialogTitle>
 									<DialogContent>
-										<Typography
-											variant="body1"
-										> Posting as Abhirup Bhattacharya
+										<Typography variant="body1">
+											{" "}
+											Posting as Abhirup Bhattacharya
 										</Typography>
 										<TextField
 											margin="dense"
