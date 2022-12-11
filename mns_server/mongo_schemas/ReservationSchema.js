@@ -15,6 +15,10 @@ const ReservationSchema = new Schema({
 		required: true,
 		default: 'upcoming'
 	},
+	"property_name": {
+		type: String,
+		required: true,
+	},
 	"receipt_id": {
 		type: mongoose.Schema.Types.ObjectId,
 	},

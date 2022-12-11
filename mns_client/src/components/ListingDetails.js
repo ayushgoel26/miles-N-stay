@@ -36,7 +36,8 @@ function ListingDetails() {
       "status": "pending",
       "host_id": property.host_id,
       "guest_id": property.host_id,
-      "property_id": property._id
+      "property_id": property._id,
+      "property_name": property.property_name
     }
     const requestOptions = {
       method: "POST",
