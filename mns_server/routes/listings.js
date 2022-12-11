@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const express = require('express');
 var router = express.Router();
-const ListingSchema = require("../mongo_schemas/ListingSchema")
+const ListingSchema = require("../mongo_schemas/listingSchema")
+const ReviewsSchema = require("../mongo_schemas/ReviewsSchema")
 const multer = require('multer')
 const fs = require('fs')
 
@@ -99,6 +100,39 @@ router.get("/:id", function (req, res) {
 	);
   });
 
+
+  router.post('/reviews', (req, res) => {
+    console.log("inside review post")
+    console.log(req.body)
+    const Reviews = mongoose.model("reviews", ReviewsSchema);
+		Reviews.create(req.body, (err, reviews) => {
+			if (err) {
+				console.log(err);
+				return res.status(500).send(err)
+			}
+            
+			res.send(reviews)
+		});
+});
+
+router.get("/reviews/:id", function (req, res) {
+	console.log(req.query);
+	const Reviews = mongoose.model("reviews", ReviewsSchema);
+	const { id } = req.params;
+  console.log(id)
+
+	Reviews.find(
+		{property_id: id},
+	  (err, reviews) => {
+		if (err) {
+		  console.log(err);
+		} else {
+		  res.json(reviews);
+		}
+		return;
+	  }
+	);
+  });
 
 //   router.post("/save-image",upload.single('image'), function (req, res) {
 // 	try {

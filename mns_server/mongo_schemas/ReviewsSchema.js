@@ -7,9 +7,10 @@ const ReviewsSchema = new Schema({
             required:true
         }
     },
-    property:{
-        id: mongoose.Schema.Types.ObjectId,
-        required : true
+    property_id:{
+        type: String,   
+        required :true
+        
     },
     date:{
         type: Date,
