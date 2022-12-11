@@ -7,9 +7,15 @@ const multer = require("multer");
 const fs = require("fs");
 const { response } = require("express");
 
-const multi_upload = multer({
-  dest: "../mns_client/public/img/propertyImages/",
-}).array("file", 10);
+var storage = multer.diskStorage({
+  destination: "../mns_client/public/img/propertyImages/",
+  filename: function (req, file, cb) {
+    const suffix = file.mimetype.split("/");
+    cb(null, `${file.fieldname}-${Date.now()}.${suffix[1]}`);
+  },
+});
+
+var multi_upload = multer({ storage: storage }).array("file", 10);
 
 const mongoDB = "mongodb://localhost:27017/milesNstay";
 
@@ -129,17 +135,6 @@ router.get("/reviews/:id", function (req, res) {
     return;
   });
 });
-
-//   router.post("/save-image",upload.single('image'), function (req, res) {
-// 	try {
-// 		fs.writeFileSync(`assets/upload/${req.file.name}`, req.file);
-
-// 		const imageUrl = `http://localhost:3000/assets/uploads/${req.file.filename}`;
-// 		res.send(imageUrl);
-// 	}  catch (error) {
-// 		res.status(500).send(error.message);
-// 	  }
-//   });
 
 router.post("/save-image", (req, res) => {
   multi_upload(req, res, function (err) {
