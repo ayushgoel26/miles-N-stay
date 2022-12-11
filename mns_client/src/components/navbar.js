@@ -2,9 +2,8 @@ import { useState } from "react";
 import { Col } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import { BsFillQuestionCircleFill, BsPerson } from "react-icons/bs";
-import Button from "react-bootstrap/Button";
-import SignUpModal from "./signUpModal";
-import {Link} from "react-router-dom";
+import SignUpLoginModal from "./signUpLoginModal";
+import { Link } from "react-router-dom";
 
 import "./navbar.css";
 import SearchBar from "./searchbar";
@@ -30,25 +29,23 @@ function NavbarHome(props) {
         className="col-sm-1 justify-content-end"
         id="basic-navbar-nav"
       >
-        <ul class="navbar-nav ml-auto">
-        <li class="nav-item mx-2">
-            <Link to="/addProperty">
-            Become a Host
-            </Link>
+        <ul className="navbar-nav ml-auto">
+          <li className="nav-item mx-2">
+            <Link to="/addProperty">Become a Host</Link>
           </li>
-          <li class="nav-item mx-2">
+          <li className="nav-item mx-2">
             <Link to="/">
-            <BsFillQuestionCircleFill style={{ width: "2em", height: "2em" }} />
+              <BsFillQuestionCircleFill
+                style={{ width: "2em", height: "2em" }}
+              />
             </Link>
           </li>
-          <li class="nav-item mx-2">
-            {/* <Button variant="primary" onClick={openSignUpModal}> */}
+          <li className="nav-item mx-2">
             <BsPerson
               onClick={openSignUpModal}
               style={{ width: "2em", height: "2em" }}
             />
-            {/* </Button> */}
-            <SignUpModal
+            <SignUpLoginModal
               showModal={showSignUpModal}
               closeModal={closeSignUpModal}
             />
