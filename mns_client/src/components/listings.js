@@ -7,7 +7,7 @@ function Listings() {
   console.log(data);
 
   const rows = [];
-  for (let i = 0; i < data.length; ) {
+  for (let i = 0; i < data.length;) {
     if (4 * i + 4 > data.length) {
       rows.push(
         <ListingsCardsRow cards={data.slice(i, data.length)} keys={i / 4} />

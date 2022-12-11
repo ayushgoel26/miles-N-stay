@@ -8,7 +8,6 @@ import {
 	Card,
 	CardMedia,
 	CardContent,
-	Chip,
 	Button,
 	Divider,
 	List,
@@ -19,11 +18,9 @@ import {
 	Dialog,
 	DialogTitle,
 	DialogContent,
-	DialogActions,
-	makeStyles
+	DialogActions
 } from '@material-ui/core'
 
-import mongoose from 'mongoose'
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { Rating } from '@material-ui/lab';
@@ -31,14 +28,37 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 function ListingDetails() {
-
 	const [property, setProperty] = useState(null);
-	const [startDate, setStartDate] = useState(new Date().getDate());
-	const [endDate, setEndDate] = useState(new Date().getDate() + 1);
-
-	const navigate = useNavigate();
+	const [startDate, setStartDate] = useState(new Date());
+	const [endDate, setEndDate] = useState(new Date());
 	const location = useLocation();
 	const listing_id = location.state.from;
+	const navigate = useNavigate();
+
+	const startDateChange = (e) => {
+		console.log(`${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate() + 1}`)
+		if (new Date(e.target.value) > new Date()) {
+			setStartDate(e.target.value)
+		} else {
+			alert('Check-in date cannot be in past.')
+			document.getElementById("#checkin-date").value = ''
+		}
+	}
+
+	const endDateChange = (e) => {
+		if (!(startDate)) {
+			alert(`Pick Check-In date first`)
+		} else {
+			let x = new Date(startDate);
+			let y = new Date(e.target.value);
+			if (y <= x) {
+				setEndDate(e.target.value)
+			} else {
+				alert(`Check-out date [${e.target.value}] should be after Check-in Date [${startDate}]`)
+			}
+		}
+
+	}
 
 	const reserve = () => {
 		let requestBody = {
@@ -57,8 +77,10 @@ function ListingDetails() {
 		};
 		fetch("http://localhost:3000/reservations/", requestOptions)
 			.then((response) => response.json())
-			.then((data) => console.log(data));
+			.then((data) => console.log(data))
+			.catch((err) => console.log(err));
 	};
+
 	const initial_review = {
 		reviewer: {
 			name: "Abhirup Bhattacharya",
@@ -74,17 +96,13 @@ function ListingDetails() {
 	const [isFavorited, setIsFavorited] = useState(false);
 	const [wishFetched, setWishFetched] = useState(false)
 
-
 	useEffect(() => {
 		const dataFetch = async () => {
 			const data = await (
-				await fetch(
-					"http://localhost:3000/listings/" + listing_id
-				)
+				await fetch("http://localhost:3000/listings/" + listing_id)
 			).json();
-			console.log(data)
+			console.log(data);
 			setProperty(data);
-
 		};
 
 		dataFetch();
@@ -94,6 +112,7 @@ function ListingDetails() {
 	useEffect(() => {
 		// Fetch data from the API
 		fetch('http://localhost:3000/wishlist?prop_id=' + listing_id + '&guest_id=123')
+		fetch('http://localhost:3000/wishlist?prop_id=6393d4817fcee3470f65b6f4&guest_id=123')
 			.then((response) => response.json())
 			.then((json) => {
 				setWishFetched(true)
@@ -130,12 +149,6 @@ function ListingDetails() {
 	};
 
 	const handleClose = () => {
-		//const formData1 = new FormData();
-		//formData1.append('property_name', 'Mi Casa');
-		//formData1.append('property_type', 'Boat');
-
-
-
 		const requestOptions = {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
@@ -146,29 +159,23 @@ function ListingDetails() {
 			.then((data) => console.log(data))
 			.then(navigate(0))
 			.catch((error) => console.log(error));
-
 		setOpen(false);
 	};
 
-	// console.log(property)
 	const handleRating = (newRating) => {
 		setRating(newRating);
 		setReviewData({ ...reviewData, rating: newRating })
 	};
 	const [rating, setRating] = React.useState(0);
 
-
-
-
 	const handleClick = () => {
 		if (isFavorited) {
-			setIsFavorited(false)
-		}
-		else {
-			setIsFavorited(true)
+			setIsFavorited(false);
+		} else {
+			setIsFavorited(true);
 		}
 
-		console.log(isFavorited)
+		console.log(isFavorited);
 
 		if (!isFavorited) {
 			const requestOptions = {
@@ -195,11 +202,8 @@ function ListingDetails() {
 
 	};
 
-
 	if (property && reviews) {
 		return (
-
-
 			<Container style={{ backgroundColor: "white" }}>
 				<Grid container spacing={2}>
 
@@ -217,21 +221,16 @@ function ListingDetails() {
 							</Button>
 						</Typography>
 
-
-
 						<Card>
 							<CardMedia
 								component="img"
 								alt={property.name}
 								height="380"
-								// image={property.image}
-								image={`/img/${property.images[0]}`}
+								image={`img/propertyImages${property.images[0]}`}
 								title={property.name}
 								style={{ margin: "1%" }}
 							/>
-
 						</Card>
-
 					</Grid>
 				</Grid>
 
@@ -448,9 +447,9 @@ function ListingDetails() {
 								<Dialog open={open} onClose={handleClose}>
 									<DialogTitle>Add Review</DialogTitle>
 									<DialogContent>
-										<Typography
-											variant="body1"
-										> Posting as Abhirup Bhattacharya
+										<Typography variant="body1">
+											{" "}
+											Posting as Abhirup Bhattacharya
 										</Typography>
 										<TextField
 											margin="dense"
@@ -516,7 +515,7 @@ function ListingDetails() {
 												{review.reviewer.name}
 												<br />
 											</Typography>
-											<Typography variant="h7">
+											<Typography variant="h6">
 												{review.date}
 												<br />
 											</Typography>
@@ -535,16 +534,15 @@ function ListingDetails() {
 								</ol>
 							)}
 							{reviews.length === 0 && (
-								<Typography variant="h7">No Reviews Yet</Typography>
+								<Typography variant="h6">No Reviews Yet</Typography>
 							)}
 						</List>
 					</Card>
 				</Grid>
-
-				{/* </Grid> */}
 			</Container>
 		);
 	}
+
 }
 
 export default ListingDetails;

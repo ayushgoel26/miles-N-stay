@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import { Country, State, City } from "country-state-city";
 import "../stylesheets/signUpModal.css";
 import md5 from "md5";
+import { ReactSession } from "react-client-session";
 
 function SignUpForm(props) {
   var errorFlag;
@@ -87,14 +88,15 @@ function SignUpForm(props) {
 
   const checkUsername = (e) => {
     userErrorFlag = false;
+    var error;
     if (formData.username !== "") {
       if (formData.username.length < 6) {
         userErrorFlag = true;
-        var error = document.getElementById("username_length_error");
+        error = document.getElementById("username_length_error");
         error.style.display = "inline";
         document.getElementById("username").style.border = "2px solid red";
       } else {
-        var error = document.getElementById("username_length_error");
+        error = document.getElementById("username_length_error");
         error.style.display = "none";
         document.getElementById("username").style.border = "1px solid #ced4da";
         fetch(`http://localhost:3000/users/username/${formData.username}`)
@@ -184,7 +186,13 @@ function SignUpForm(props) {
 
       fetch("http://localhost:3000/users/signup", requestOptions)
         .then((response) => response.json())
-        .then((data) => console.log(data));
+        .then((data) => {
+          ReactSession.set("id", data._id);
+          ReactSession.set("username", data.username);
+          ReactSession.set("first_name", data.name.first_name);
+          ReactSession.set("last_name", data.name.last_name);
+          ReactSession.set("is_host", data.is_host);
+        });
       setFormData(formDataInitialState);
       setConfirmPassword("");
       setGovID("");

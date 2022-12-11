@@ -36,6 +36,8 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
+    console.log(req.body)
+
     if ("receipt_id" in req.body) {
         req.body['receipt_id'] = mongoose.Types.ObjectId(req.body['receipt_id'])
     }
@@ -67,13 +69,40 @@ router.post('/', (req, res) => {
     }
 
     console.log(req.body)
-    Reservations.create(req.body, (err, reservation) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).send(err)
-        }
-        res.send({ 'id': reservation._id })
-    });
+    startDate = req.body.start_date;
+    endDate = req.body.end_date;
+    isAvailable = true
+    Reservations.find({
+        $or: [
+            { start_date: { $lte: startDate }, end_date: { $gte: startDate } },
+            { start_date: { $lte: endDate }, end_date: { $gte: endDate } },
+            { start_date: { $gte: startDate }, end_date: { $lte: endDate } },
+            { start_date: { $lte: startDate }, end_date: { $gte: endDate } },
+        ],
+    })
+        .then((docs) => {
+            console.log('--------')
+            console.log(docs)
+            if (docs.length > 0) {
+                isAvailable = !isAvailable
+                return res.status(500).send({ 'msg': 'Dates not available' })
+            }
+        }).then(() => {
+            if (isAvailable) {
+                Reservations.create(req.body, (err, reservation) => {
+                    if (err) {
+                        return res.status(500).send(err)
+                    }
+                    console.log(`reservation created [${reservation._id}]`)
+                    return res.status(200).send({ 'msg': 'Reservation successful' })
+                });
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            return res.status(500).send({ 'msg': err })
+        });
+
 });
 
 router.delete('/:id', (req, res) => {

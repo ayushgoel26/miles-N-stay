@@ -41,7 +41,6 @@ function PropertyImage({ formData, setFormData }) {
           },
         }
       );
-
       console.log(res.data);
       setFormData((prevFormData) => ({
         ...prevFormData,

@@ -12,9 +12,12 @@ import ListingDetails from "./components/ListingDetails";
 import Reservations from "./components/reservations";
 import Dashboard from "./components/Dashboard";
 import ReservationsWrapper from "./components/reservations_wrapper";
+import { ReactSession } from "react-client-session";
 
+ReactSession.setStoreType("localStorage");
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <React.StrictMode>
     <Router>
