@@ -34,9 +34,16 @@ function NavbarHome() {
         className="col-sm-1 justify-content-end"
         id="basic-navbar-nav"
       >
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item mx-2">
-            <Link to="/addProperty">Become a Host</Link>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item mx-2">
+            <Link to="/addProperty">
+              Show Reservations
+            </Link>
+          </li>
+          <li class="nav-item mx-2">
+            <Link to="/addProperty">
+              Become a Host
+            </Link>
           </li>
           <li className="nav-item mx-2">
             <Link to="/">
