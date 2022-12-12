@@ -1,74 +1,104 @@
 const mongoose = require("mongoose");
-const express = require('express');
+const express = require("express");
 var router = express.Router();
 const WishListSchema = require("../mongo_schemas/wishListSchema");
-
+const ListingSchema = require("../mongo_schemas/listingSchema");
 
 const mongoDB = "mongodb://localhost:27017/milesNstay";
 
-mongoose.connect(mongoDB).then((dbo) => {
-	console.log("DB connected")
-}, (err) => {
-	console.log("error")
-	console.error(err)
+mongoose.connect(mongoDB).then(
+  (dbo) => {
+    console.log("DB connected");
+  },
+  (err) => {
+    console.log("error");
+    console.error(err);
+  }
+);
+
+router.get("/", (req, res) => {
+  console.log(req.query);
+  const { prop_id, guest_id } = req.query;
+  console.log(prop_id);
+  const WishList = mongoose.model("wishlist", WishListSchema);
+
+  WishList.findOne(
+    { property_id: prop_id, guest_id: guest_id },
+    (err, wishlist) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send(err);
+      }
+
+      res.send(wishlist);
+    }
+  );
 });
 
+router.get("/:id", (req, res) => {
+  console.log(req.params.id);
+  const WishList = mongoose.model("wishlist", WishListSchema);
 
-router.get('/', (req, res) => {
-    
+  WishList.find({ guest_id: req.params.id }, (err, wishlist) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+    const Listings = mongoose.model("properties", ListingSchema);
 
-    console.log(req.query);
-    const {prop_id,guest_id} = req.query;
-    console.log(prop_id)
-	const WishList = mongoose.model("wishlist", WishListSchema);
-
-	WishList.findOne({property_id: prop_id, guest_id: guest_id}, (err, wishlist) => {
-			if (err) {
-				console.log(err);
-				return res.status(500).send(err)
-			}
-            
-			res.send(wishlist)
+    let query = [];
+    for (var i = 0; i < wishlist.length; i++) {
+      query.push({ _id: wishlist[i].property_id });
+    }
+    console.log(query);
+    Listings.find(
+      {
+        $or: query,
+      },
+      (err, properties) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send(err);
+        }
+        res.send(properties);
+      }
+    );
   });
 });
 
-router.post('/', (req, res) => {
+router.post("/", (req, res) => {
+  console.log(req.query);
+  const WishList = mongoose.model("wishlist", WishListSchema);
 
-    console.log(req.query);
-	const WishList = mongoose.model("wishlist", WishListSchema);
+  WishList.create(req.body, (err, wishlist) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
 
-	WishList.create(req.body, (err, wishlist) => {
-			if (err) {
-				console.log(err);
-				return res.status(500).send(err)
-			}
-            
-			res.send(wishlist)
+    res.send(wishlist);
   });
 });
 
-  router.get('/delete', (req, res) => {
+router.get("/delete", (req, res) => {
+  console.log(req.query);
+  const WishList = mongoose.model("wishlist", WishListSchema);
+  const { prop_id, guest_id } = req.query;
 
-    console.log(req.query);
-	const WishList = mongoose.model("wishlist", WishListSchema);
-	const {prop_id,guest_id} = req.query;
-
-	WishList.deleteMany({
-	$and:[
-        {guest_id : guest_id},
-        {property_id: prop_id}
-    ]},
-	  (err, wishlist) => {
-		if (err) {
-		  console.log(err);
-		} else {
-		  res.json(wishlist);
-		}
-		return;
-	  }
-	);
-  });
-
+  WishList.deleteMany(
+    {
+      $and: [{ guest_id: guest_id }, { property_id: prop_id }],
+    },
+    (err, wishlist) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(wishlist);
+      }
+      return;
+    }
+  );
+});
 
 mongoose.connect(mongoDB).then(
   (dbo) => {
@@ -119,62 +149,53 @@ router.get("/", function (req, res) {
   );
 });
 
-
 router.get("/:id", function (req, res) {
-	console.log(req.query);
-	const Listings = mongoose.model("properties", ListingSchema);
-	const { id } = req.params;
-	Listings.findById(
-		id,
-	  (err, listing) => {
-		if (err) {
-		  console.log(err);
-		} else {
-		  res.json(listing);
-		}
-		return;
-	  }
-	);
+  console.log(req.query);
+  const Listings = mongoose.model("properties", ListingSchema);
+  const { id } = req.params;
+  Listings.findById(id, (err, listing) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(listing);
+    }
+    return;
   });
+});
 
+router.post("/reviews", (req, res) => {
+  console.log("inside review post");
+  console.log(req.body);
+  const Reviews = mongoose.model("reviews", ReviewsSchema);
+  Reviews.create(req.body, (err, reviews) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
 
-  router.post('/reviews', (req, res) => {
-    console.log("inside review post")
-    console.log(req.body)
-    const Reviews = mongoose.model("reviews", ReviewsSchema);
-		Reviews.create(req.body, (err, reviews) => {
-			if (err) {
-				console.log(err);
-				return res.status(500).send(err)
-			}
-            
-			res.send(reviews)
-		});
+    res.send(reviews);
+  });
 });
 
 router.get("/reviews/:id", function (req, res) {
-	console.log(req.query);
-	const Reviews = mongoose.model("reviews", ReviewsSchema);
-	const { id } = req.params;
-  console.log(id)
+  console.log(req.query);
+  const Reviews = mongoose.model("reviews", ReviewsSchema);
+  const { id } = req.params;
+  console.log(id);
 
-	Reviews.find(
-		{property_id: id},
-	  (err, reviews) => {
-		if (err) {
-		  console.log(err);
-		} else {
-		  res.json(reviews);
-		}
-		return;
-	  }
-	);
+  Reviews.find({ property_id: id }, (err, reviews) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(reviews);
+    }
+    return;
   });
+});
 
-
-router.post('/save-image', (req,res) => {
-	console.log('Got a post request')
-	res.send('Got a post request')
-})
+router.post("/save-image", (req, res) => {
+  console.log("Got a post request");
+  res.send("Got a post request");
+});
 
 module.exports = router;

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Col } from "react-bootstrap";
+import { Col, DropdownButton } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import { BsFillQuestionCircleFill, BsPerson } from "react-icons/bs";
 import SignUpLoginModal from "./signUpLoginModal";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import Button from "react-bootstrap/Button";
+import { ReactSession } from "react-client-session";
 import "./navbar.css";
 import SearchBar from "./searchbar";
 
@@ -12,22 +13,30 @@ function NavbarHome() {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const openSignUpModal = () => setShowSignUpModal(true);
   const closeSignUpModal = () => setShowSignUpModal(false);
+  const navigate = useNavigate()
 
   const location = useLocation().pathname;
-  const navigate = useNavigate();
 
-  function handleClick(event) {
-    // Prevent the default link behavior
-    event.preventDefault();
-
-    // Ask the user for confirmation
-    if (window.confirm("Are you sure you want to become a host?")) {
-      // If the user confirms, navigate to the new location
-      navigate('/addProperty');
+  const selectPersonIcon = () => {
+    console.log(ReactSession.get("id"))
+    console.log('inhere')
+    if (ReactSession.get("id") == undefined) {
+      openSignUpModal()
+    } else {
+      document.getElementById("myDropdown").classList.toggle("show");
     }
   }
 
+  const logout = () => {
+    localStorage.clear();
+    document.getElementById("myDropdown").classList.toggle("show");
+    navigate("/")
+  }
 
+  const redirectDashboard = () => {
+    document.getElementById("myDropdown").classList.toggle("show");
+    navigate("/dashboard")
+  }
 
   return (
     <Navbar className="row fix-top" bg="light" expand="md" id="navbarmenu">
@@ -48,27 +57,33 @@ function NavbarHome() {
         className="col-sm-1 justify-content-end"
         id="basic-navbar-nav"
       >
-        <ul className="navbar-nav ml-auto">
+        <ul className="navbar-nav">
           <li className="nav-item mx-2">
-            <Link to="/">
+            <div className="dropdown">
+              <Button onClick={selectPersonIcon}>
+                <BsPerson style={{ width: "2em", height: "2em", float: "right" }} />
+              </Button>
+              <div id="myDropdown" class="dropdown-content">
+                <a onClick={redirectDashboard}>Dashboard</a>
+                <a onClick={logout}>Logout</a>
+              </div>
+              <SignUpLoginModal
+                showModal={showSignUpModal}
+                closeModal={closeSignUpModal}
+              />
+            </div>
+          </li>
+          <li className="nav-item mx-2">
+            <Button>
               <BsFillQuestionCircleFill
                 style={{ width: "2em", height: "2em" }}
               />
-            </Link>
+            </Button>
           </li>
-          <li className="nav-item mx-2">
-            <BsPerson
-              onClick={openSignUpModal}
-              style={{ width: "2em", height: "2em" }}
-            />
-            <SignUpLoginModal
-              showModal={showSignUpModal}
-              closeModal={closeSignUpModal}
-            />
-          </li>
+
         </ul>
       </Navbar.Collapse>
-    </Navbar>
+    </Navbar >
   );
 }
 

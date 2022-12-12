@@ -42,7 +42,7 @@ function Homepage() {
       <div className="jumbotron jumbotron-fluid" id="welcome-div">
         <Search />
       </div>
-      <CarouselMulti></CarouselMulti>
+      {/* <CarouselMulti></CarouselMulti> */}
     </div>
   );
 }

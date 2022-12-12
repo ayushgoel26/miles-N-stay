@@ -30,23 +30,21 @@ import {
     DialogContent,
     DialogActions,
     makeStyles,
-    CardHeader, Tab,
-    Tabs
-} from '@material-ui/core'
+    CardHeader,
+    Tab,
+    Tabs,
+} from "@material-ui/core";
 
-import mongoose from 'mongoose'
-import StarIcon from '@material-ui/icons/Star';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import { Rating } from '@material-ui/lab';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-
-
-
+import mongoose from "mongoose";
+import StarIcon from "@material-ui/icons/Star";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
+import { Rating } from "@material-ui/lab";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 
 function Dashboard() {
-
     const [tab, setTab] = React.useState(0);
+    const navigate = useNavigate();
 
     const navigate = useNavigate()
     const handleChange = (event, newValue) => {
@@ -71,10 +69,9 @@ function Dashboard() {
 
     useEffect(() => {
         const reviewFetch = async () => {
-            var entity = is_ui_host ? "host" : "guest"
             const data = await (
                 await fetch(
-                    `http://localhost:3000/reservations/upcoming/${entity}/${user_id}`
+                    "http://localhost:3000/reservations/upcoming/" + user_id
                 )
             ).json();
             console.log(data)
@@ -212,6 +209,18 @@ function Dashboard() {
     }
 
 
+    const pickWishlist = () => {
+        fetch("http://localhost:3000/wishlist/" + user_id)
+            .then((response) => response.json())
+            .then((data) =>
+                navigate("/allProperties", {
+                    state: {
+                        data: data,
+                        title: "Your Wishlist",
+                    },
+                })
+            );
+    };
 
     return (
 
@@ -255,11 +264,17 @@ function Dashboard() {
                         </Typography>
 
                         <CardContent>
-                            <br />
-                            Welcome to our MilesNStay! We are so glad you have chosen to stay with us. Our goal is to make your experience with us as comfortable and enjoyable as possible. Our team is here to help with anything you need during your stay, so please don't hesitate to reach out. Thank you for choosing us, and we hope you have a wonderful time here! From cozy cottages to elegant penthouses, Hosts are happy to share their places. Whether its a work trip, weekend getaway, family vacation, or a longer stay, there are millions of amazing places to visit.
+                            Welcome to our MilesNStay! We are so glad you have chosen to stay
+                            with us. Our goal is to make your experience with us as
+                            comfortable and enjoyable as possible. Our team is here to help
+                            with anything you need during your stay, so please don't hesitate
+                            to reach out. Thank you for choosing us, and we hope you have a
+                            wonderful time here! From cozy cottages to elegant penthouses,
+                            Hosts are happy to share their places. Whether its a work trip,
+                            weekend getaway, family vacation, or a longer stay, there are
+                            millions of amazing places to visit.
                         </CardContent>
                     </Card>
-
                 </Grid>
 
 
@@ -393,9 +408,8 @@ function Dashboard() {
             </Grid>
 
             {/* </Grid> */}
-        </Container >
+        </Container>
     );
 }
-
 
 export default Dashboard;

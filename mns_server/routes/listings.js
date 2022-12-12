@@ -29,10 +29,12 @@ mongoose.connect(mongoDB).then(
   }
 );
 
+const Listings = mongoose.model("properties", ListingSchema);
+const Reviews = mongoose.model("reviews", ReviewsSchema);
+
 router.post("/", (req, res) => {
   console.log("inside post endpoint");
   console.log(req.body);
-  const Listings = mongoose.model("properties", ListingSchema);
   Listings.create(req.body, (err, listings) => {
     if (err) {
       console.log(err);
@@ -43,18 +45,7 @@ router.post("/", (req, res) => {
   });
 });
 
-mongoose.connect(mongoDB).then(
-  (dbo) => {
-    console.log("DB connected");
-  },
-  (err) => {
-    console.log("Unable to connect to DB");
-    console.error(err);
-  }
-);
-
 router.get("/", function (req, res) {
-  const Listings = mongoose.model("properties", ListingSchema);
   if (req.query.city === undefined) {
     var city = "";
   } else {
@@ -93,8 +84,7 @@ router.get("/", function (req, res) {
 });
 
 router.get("/:id", function (req, res) {
-  console.log(req.query);
-  const Listings = mongoose.model("properties", ListingSchema);
+
   const { id } = req.params;
   Listings.findById(id, (err, listing) => {
     if (err) {
@@ -107,9 +97,7 @@ router.get("/:id", function (req, res) {
 });
 
 router.post("/reviews", (req, res) => {
-  console.log("inside review post");
-  console.log(req.body);
-  const Reviews = mongoose.model("reviews", ReviewsSchema);
+
   Reviews.create(req.body, (err, reviews) => {
     if (err) {
       console.log(err);
@@ -121,10 +109,9 @@ router.post("/reviews", (req, res) => {
 });
 
 router.get("/reviews/:id", function (req, res) {
-  console.log(req.query);
-  const Reviews = mongoose.model("reviews", ReviewsSchema);
+
   const { id } = req.params;
-  console.log(id);
+
 
   Reviews.find({ property_id: id }, (err, reviews) => {
     if (err) {
@@ -138,7 +125,7 @@ router.get("/reviews/:id", function (req, res) {
 
 router.post("/save-image", (req, res) => {
   multi_upload(req, res, function (err) {
-    console.log(req.files);
+
     var response = [];
     if (req.files.length > 0) {
       for (var i = 0; i < req.files.length; i++) {
@@ -146,7 +133,7 @@ router.post("/save-image", (req, res) => {
       }
     }
     if (err instanceof multer.MulterError) {
-      console.log(err);
+
       res
         .status(500)
         .send({
@@ -174,9 +161,8 @@ router.post("/save-image", (req, res) => {
 });
 
 router.get("/host/:id", function (req, res) {
-  console.log(req.query);
 
-  const Listings = mongoose.model("properties", ListingSchema);
+
   const { id } = req.params;
   Listings.find({ host_id: id, is_deleted: false }, (err, listings) => {
     if (err) {
@@ -191,10 +177,9 @@ router.get("/host/:id", function (req, res) {
 
 router.put("/delete/:id", function (req, res) {
 
-  const Listings = mongoose.model("properties", ListingSchema);
   Listings.findById(req.params.id, (err, listing_data) => {
     if (err) {
-      console.log(err);
+
       return err;
     } else {
       listing_data.is_deleted = true;
@@ -217,8 +202,6 @@ router.put("/:id", function (req, res) {
 
   var query = { '_id': req.params.id };
   req.newData = req.body;
-
-  const Listings = mongoose.model("properties", ListingSchema);
   Listings.findOneAndUpdate(query, req.newData, { upsert: true }, function (err, doc) {
     if (err) return res.send(500, { error: err });
     return res.send('Succesfully saved!');
