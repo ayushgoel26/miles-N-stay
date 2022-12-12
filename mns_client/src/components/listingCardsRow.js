@@ -8,11 +8,11 @@ const ListingsCardsRow = (props) => {
       {props.cards.map((d) => (
         <Col key={d.id} className="mb-3">
           <Card className="listingsCard">
-            <Link to={`/listingDetails`} state={{ from: d._id }}>
+            <Link to={`/listingDetails`} state={{ listing_id: d._id }}>
               <Card.Img
                 className="rounded"
                 variant="top"
-                src={"/img/jbnu2.jpg"}
+                src={`img/propertyImages/${d.images[0]}`}
               />
             </Link>
             <p className="small text-uppercase ms-3 mb-0">

@@ -52,9 +52,9 @@ function Reservations(props) {
                             {reservations.map((reservation) => (
                                 <li key={reservation._id}>
                                     <Grid container>
-                                        <Grid item style={{ paddingRight: "3%" }}>
-                                            <img src='img/home.jpg' style={{ height: "100px", width: "100px" }} />
-                                        </Grid>
+                                        {/* <Grid item style={{ paddingRight: "3%" }}>
+                                            <img src={`img/propertyImages/${d.images[0]}`} style={{ height: "100px", width: "100px" }} />
+                                        </Grid> */}
                                         <Grid item>
                                             <Typography variant="h6">
                                                 {reservation.property_name}

@@ -68,9 +68,10 @@ function Dashboard() {
 
     useEffect(() => {
         const reviewFetch = async () => {
+            var entity = is_ui_host ? "host" : "guest"
             const data = await (
                 await fetch(
-                    "http://localhost:3000/reservations/upcoming/" + user_id
+                    `http://localhost:3000/reservations/upcoming/${entity}/${user_id}`
                 )
             ).json();
             console.log(data)
@@ -226,7 +227,7 @@ function Dashboard() {
         <Container style={{ backgroundColor: "white" }}>
             <Grid container spacing={2}>
 
-                <Grid item xs={12} sm={12} style={{ marginTop: "1%", marginBottom: "1%" }}>
+                <Grid item xs={12} sm={12} spacing={2} style={{ marginTop: "1%", marginBottom: "1%" }}>
 
                     <Card styles={{ padding: "10%" }}>
                         {is_host &&
@@ -244,7 +245,7 @@ function Dashboard() {
                                 <Button
                                     variant="contained"
                                     color="success"
-                                    style={{ float: "right" }}
+                                    style={{ float: "right", marginLeft: "1%" }}
                                     onClick={handleClickToHost}
                                 >
                                     Become a Host
@@ -255,7 +256,7 @@ function Dashboard() {
                                 <Button
                                     variant="contained"
                                     color="secondary"
-                                    style={{ float: "right" }}
+                                    style={{ float: "right", marginLeft: "1%" }}
                                     onClick={pickWishlist}
                                 >
                                     View Wishlist

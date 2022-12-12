@@ -10,12 +10,15 @@ import {
   Divider, Typography, Grid
 } from '@material-ui/core'
 import { ReactSession } from 'react-client-session';
+import { useNavigate } from 'react-router-dom';
 
 function AddPropertyForm() {
 
   const [page, setPage] = useState(0);
   //host_id = mongoose.Types.ObjectId(123);
   let host_id = ReactSession.get("id")
+  const navigate = useNavigate()
+
   const [formData, setFormData] = useState({
     host_id: mongoose.Types.ObjectId(host_id),
     property_name: "",
@@ -97,9 +100,7 @@ function AddPropertyForm() {
   }
 
   const handleSubmit = () => {
-    console.log("Inside handlesubmit")
 
-    window.alert(formData.property_name)
 
     console.log(JSON.stringify(formData))
 
@@ -114,7 +115,7 @@ function AddPropertyForm() {
     };
     fetch("http://localhost:3000/listings", requestOptions)
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then(navigate("/dashboard"))
 
 
   }
