@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Col } from "react-bootstrap";
+import { Col, DropdownButton } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import { BsFillQuestionCircleFill, BsPerson } from "react-icons/bs";
 import SignUpLoginModal from "./signUpLoginModal";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import Dropdown from 'react-bootstrap/Dropdown';
 
 import "./navbar.css";
 import SearchBar from "./searchbar";
@@ -14,20 +15,6 @@ function NavbarHome() {
   const closeSignUpModal = () => setShowSignUpModal(false);
 
   const location = useLocation().pathname;
-  const navigate = useNavigate();
-
-  function handleClick(event) {
-    // Prevent the default link behavior
-    event.preventDefault();
-
-    // Ask the user for confirmation
-    if (window.confirm("Are you sure you want to become a host?")) {
-      // If the user confirms, navigate to the new location
-      navigate('/addProperty');
-    }
-  }
-
-
 
   return (
     <Navbar className="row fix-top" bg="light" expand="md" id="navbarmenu">
@@ -48,34 +35,33 @@ function NavbarHome() {
         className="col-sm-1 justify-content-end"
         id="basic-navbar-nav"
       >
-        <ul className="navbar-nav ml-auto">
+        <ul className="navbar-nav">
+
           <li className="nav-item mx-2">
-            <Link to="/allReservations">
-              Show Reservations
-            </Link>
+            <Dropdown>
+              <Dropdown.Toggle variant="light" className='bg-white border-0 p-0' id='dropdown-button-drop-start' style={{ width: "2em", height: "2em", float: "right" }}>
+                <BsPerson />
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={openSignUpModal}>Login
+
+                </Dropdown.Item>
+                <SignUpLoginModal
+                  showModal={showSignUpModal}
+                  closeModal={closeSignUpModal}
+                />
+                <Dropdown.Item href="#/action-3">Logout</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+
           </li>
           <li className="nav-item mx-2">
-            <Link to="/addProperty" onClick={handleClick}>
-              Become a Host
-            </Link>
-          </li>
-          <li className="nav-item mx-2">
-            <Link to="/">
-              <BsFillQuestionCircleFill
-                style={{ width: "2em", height: "2em" }}
-              />
-            </Link>
-          </li>
-          <li className="nav-item mx-2">
-            <BsPerson
-              onClick={openSignUpModal}
+            <BsFillQuestionCircleFill
               style={{ width: "2em", height: "2em" }}
             />
-            <SignUpLoginModal
-              showModal={showSignUpModal}
-              closeModal={closeSignUpModal}
-            />
           </li>
+
         </ul>
       </Navbar.Collapse>
     </Navbar>
