@@ -163,18 +163,17 @@ router.post("/save-image", (req, res) => {
 
 // update property
 router.put("/:id", function (req, res) {
-  user.find(req.params.id, (err, user_data) => {
+  Listings.findById(req.params.id, (err, listing) => {
     if (err) {
       console.log(err);
       return err;
     } else {
-      user_data.is_host = true;
-
-      user_data.save((err) => {
+      listing = req.body;
+      listing.save((err) => {
         if (err) {
           res.send(err);
         } else {
-          res.send('User updated successfully');
+          res.send('Listing updated successfully');
         }
       });
 
