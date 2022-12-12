@@ -173,4 +173,59 @@ router.post("/save-image", (req, res) => {
   });
 });
 
+router.get("/host/:id", function (req, res) {
+  console.log(req.query);
+
+  const Listings = mongoose.model("properties", ListingSchema);
+  const { id } = req.params;
+  Listings.find({ host_id: id, is_deleted: false }, (err, listings) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(listings);
+    }
+    return;
+  });
+});
+
+
+router.put("/delete/:id", function (req, res) {
+
+  const Listings = mongoose.model("properties", ListingSchema);
+  Listings.findById(req.params.id, (err, listing_data) => {
+    if (err) {
+      console.log(err);
+      return err;
+    } else {
+      listing_data.is_deleted = true;
+
+      listing_data.save((err) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send('Listing Deleted successfully');
+        }
+      });
+
+    }
+  });
+});
+
+// update property
+router.put("/:id", function (req, res) {
+
+
+  var query = { '_id': req.params.id };
+  req.newData = req.body;
+
+  const Listings = mongoose.model("properties", ListingSchema);
+  Listings.findOneAndUpdate(query, req.newData, { upsert: true }, function (err, doc) {
+    if (err) return res.send(500, { error: err });
+    return res.send('Succesfully saved!');
+  });
+});
+
+
+
+
 module.exports = router;

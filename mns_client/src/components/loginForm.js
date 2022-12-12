@@ -3,10 +3,12 @@ import { Form, Row, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import md5 from "md5";
 import { ReactSession } from "react-client-session";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate()
 
   const loginUser = (event) => {
     event.preventDefault();
@@ -25,11 +27,13 @@ function LoginForm(props) {
           document.getElementsByClassName("error").style.display = "inline";
         } else {
           console.log(data);
+          navigate("/dashboard")
           ReactSession.set("id", data._id);
           ReactSession.set("username", data.username);
           ReactSession.set("first_name", data.name.first_name);
           ReactSession.set("last_name", data.name.last_name);
           ReactSession.set("is_host", data.is_host);
+          ReactSession.set("is_ui_host", false);
           props.closeModal();
         }
       });

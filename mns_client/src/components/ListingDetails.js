@@ -226,7 +226,7 @@ function ListingDetails() {
 								component="img"
 								alt={property.name}
 								height="380"
-								image={`img/propertyImages${property.images[0]}`}
+								image={`img/propertyImages/${property.images[0]}`}
 								title={property.name}
 								style={{ margin: "1%" }}
 							/>

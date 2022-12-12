@@ -37,13 +37,18 @@ const ListingSchema = new Schema({
     type: String,
     required: true,
   },
+  is_deleted: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
   room_type: {
     type: String,
     enum: [
-    "Private Room",
-    "Shared Room",
-    "Entire Home",
-    "Hotel Room"],
+      "Private Room",
+      "Shared Room",
+      "Entire Home",
+      "Hotel Room"],
     required: true,
   },
   max_nights: {
@@ -220,25 +225,25 @@ const ListingSchema = new Schema({
   images: [String],
   amenities: {
     sun_lounger: {
-        type: Boolean,
-        default: false,
-      },
-      swimming_pool: {
-        type: Boolean,
-        default: false,
-      },
-      natural_gas_barbeque: {
-        type: Boolean,
-        default: false,
-      },
-      television: {
-        type: Boolean,
-        default: false,
-      },
-      garden: {
-        type: Boolean,
-        default: false,
-      },
+      type: Boolean,
+      default: false,
+    },
+    swimming_pool: {
+      type: Boolean,
+      default: false,
+    },
+    natural_gas_barbeque: {
+      type: Boolean,
+      default: false,
+    },
+    television: {
+      type: Boolean,
+      default: false,
+    },
+    garden: {
+      type: Boolean,
+      default: false,
+    },
   },
   reviews: [
     {

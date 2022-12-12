@@ -50,16 +50,6 @@ function NavbarHome() {
       >
         <ul className="navbar-nav ml-auto">
           <li className="nav-item mx-2">
-            <Link to="/allReservations">
-              Show Reservations
-            </Link>
-          </li>
-          <li className="nav-item mx-2">
-            <Link to="/addProperty" onClick={handleClick}>
-              Become a Host
-            </Link>
-          </li>
-          <li className="nav-item mx-2">
             <Link to="/">
               <BsFillQuestionCircleFill
                 style={{ width: "2em", height: "2em" }}

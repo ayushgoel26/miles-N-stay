@@ -13,6 +13,7 @@ import Reservations from "./components/reservations";
 import Dashboard from "./components/Dashboard";
 import ReservationsWrapper from "./components/reservations_wrapper";
 import { ReactSession } from "react-client-session";
+import EditPropertyForm from "./components/AddProperty/EditPropertyForm";
 
 ReactSession.setStoreType("localStorage");
 
@@ -29,6 +30,7 @@ root.render(
         <Route path="/listingDetails" element={<ListingDetails />} />
         <Route path="/allReservations" element={<ReservationsWrapper />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/editProperty" element={<EditPropertyForm />} />
       </Routes>
     </Router>
     <App />
