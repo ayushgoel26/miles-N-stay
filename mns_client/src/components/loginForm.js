@@ -21,8 +21,9 @@ function LoginForm(props) {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         if (data === "login failed") {
-          document.getElementsByClassName("error").style.display = "inline";
+          document.getElementById("error_login").style.display = "inline";
         } else {
           console.log(data);
           ReactSession.set("id", data._id);
@@ -37,7 +38,7 @@ function LoginForm(props) {
   };
   return (
     <Form onSubmit={loginUser}>
-      <Form.Text className="error justify-content-center">
+      <Form.Text className="error justify-content-center" id="error_login" style={{ color: "red" }}>
         Username or password is incorrect
       </Form.Text>
       <Form.Group className="mb-3">
