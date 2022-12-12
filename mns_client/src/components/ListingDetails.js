@@ -8,6 +8,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import DatePicker from "react-datepicker";
 
+
+
 import {
 	Container,
 	Typography,
@@ -29,14 +31,32 @@ import {
 } from '@material-ui/core'
 
 function ListingDetails() {
+
+	const location = useLocation();
+	var listing_id = location.state.listing_id;
+	console.log(location.state)
+
+	const initial_review = {
+		reviewer: {
+			name: ReactSession.get('username'),
+		},
+		property_id: listing_id,
+		rating: 0,
+		comment: "",
+	};
+
 	const navigate = useNavigate();
-	const user_id = ReactSession.get('user_id');
+	const user_id = ReactSession.get('id');
 	const is_ui_host = ReactSession.get('is_ui_host');
 	const [property, setProperty] = useState(null);
 	const [startDate, setStartDate] = useState(new Date());
 	const [endDate, setEndDate] = useState(new Date());
-	const location = useLocation();
-	const listing_id = location.state.from;
+	const first_name = ReactSession.get('first_name');
+	const last_name = ReactSession.get('last_name');
+	const username = ReactSession.get('username');
+
+
+
 	const [reviewData, setReviewData] = useState(initial_review)
 	const [reviews, setReviews] = useState(null)
 	const [wishlist, setWishList] = useState(null)
@@ -81,14 +101,6 @@ function ListingDetails() {
 			.catch((err) => console.log(err));
 	};
 
-	const initial_review = {
-		reviewer: {
-			name: "Abhirup Bhattacharya",
-		},
-		property_id: listing_id,
-		rating: 0,
-		comment: "",
-	};
 
 	useEffect(() => {
 		const dataFetch = async () => {
@@ -104,15 +116,16 @@ function ListingDetails() {
 	useEffect(() => {
 		fetch(`http://localhost:3000/wishlist?prop_id=${listing_id}&guest_id=${user_id}`)
 			.then((response) => response.json())
-			.then((json) => {
+			.then((response) => console.log(response))
+			.then((data) => {
 				setWishFetched(true)
-				if (json) {
+				if (data) {
 					setIsFavorited(true)
 					console.log("inside useeffect json")
-					setWishList(json)
+					setWishList(data)
 				} else {
 					setIsFavorited(false)
-					setWishList(json)
+					setWishList(data)
 				}
 			});
 	}, []);
@@ -120,8 +133,8 @@ function ListingDetails() {
 	useEffect(() => {
 		const reviewFetch = async () => {
 			const data = await (
-				await fetch(`http://localhost:3000/listings/reviews/${listing_id}`).json()
-			)
+				await fetch(`http://localhost:3000/listings/reviews/${listing_id}`)
+			).json();
 			setReviews(data);
 		};
 		reviewFetch();
@@ -165,7 +178,7 @@ function ListingDetails() {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					guest_id: '123',
+					guest_id: user_id,
 					property_id: listing_id
 				}),
 			};
@@ -221,12 +234,12 @@ function ListingDetails() {
 					</Grid>
 				</Grid>
 
+
 				{/* <Grid> */}
 				<Grid item xs={12} sm={12} style={{ margin: "2%" }}>
 					<Typography variant="h5">
 						{property.property_type} hosted by {property.host_name}
 					</Typography>
-
 					<Grid container xs={12} sm={12} spacing={2}>
 						<Grid item xs={12} sm={6}>
 							<Card style={{ padding: "3%", marginBottom: "3%" }}>
@@ -242,204 +255,183 @@ function ListingDetails() {
 									</Typography>
 								</CardContent>
 							</Card>
-							{/* <Grid> */}
-							<Grid item xs={12} sm={12} style={{ margin: "2%" }}>
-								<Typography variant="h5">
-									{property.property_type} hosted by {property.host_name}
-								</Typography>
-								<Grid container xs={12} sm={12} spacing={2}>
-									<Grid item xs={12} sm={6}>
-										<Card style={{ padding: "3%", marginBottom: "3%" }}>
-											<Typography variant="body1" gutterBottom>
-												{property.max_guests} Guests | {property.bed_count} Beds |{" "}
-												{property.bath_count} Baths
-											</Typography>
-											<Divider />
-											<CardContent>
-												{/* <Chip label={property.type} color="primary" /> */}
+
+							<Card style={{ padding: "3%" }}>
+								<Typography variant="h6">Amenities Offered</Typography>
+								<Divider />
+								<CardContent>
+									{/* <Chip label={property.type} color="primary" /> */}
+									<ul>
+										{property.amenities.swimming_pool && (
+											<li>
 												<Typography variant="body2" gutterBottom>
-													{property.description}
+													Swimming Pool
 												</Typography>
-											</CardContent>
-										</Card>
+											</li>
+										)}
 
-										<Card style={{ padding: "3%" }}>
-											<Typography variant="h6">Amenities Offered</Typography>
-											<Divider />
-											<CardContent>
-												{/* <Chip label={property.type} color="primary" /> */}
-												<ul>
-													{property.amenities.swimming_pool && (
-														<li>
-															<Typography variant="body2" gutterBottom>
-																Swimming Pool
-															</Typography>
-														</li>
-													)}
-
-													{property.amenities.sun_lounger && (
-														<li>
-															<Typography variant="body2" gutterBottom>
-																Sun Lounger
-															</Typography>
-														</li>
-													)}
-
-													{property.amenities.garden && (
-														<li>
-															<Typography variant="body2" gutterBottom>
-																Garden
-															</Typography>
-														</li>
-													)}
-
-													{property.amenities.television && (
-														<li>
-															<Typography variant="body2" gutterBottom>
-																Television
-															</Typography>
-														</li>
-													)}
-												</ul>
-											</CardContent>
-										</Card>
-									</Grid>
-
-									<Grid item xs={12} sm={6}>
-										<Card>
-											<CardContent>
-												<Typography
-													gutterBottom
-													variant="h5"
-													component="h2"
-													style={{ justifyContent: "center" }}
-												>
-													Book your stay
+										{property.amenities.sun_lounger && (
+											<li>
+												<Typography variant="body2" gutterBottom>
+													Sun Lounger
 												</Typography>
-												<Grid container spacing={2}>
-													<Grid item xs={12} sm={6}>
-														<DatePicker
-															id="checkin-date"
-															label="Check-in date"
-															selected={startDate}
-															onChange={(e) => {
-																setStartDate(e);
-															}}
-															placeholderText="Check-IN"
-															className="form-control"
-															minDate={today}
-														/>
-													</Grid>
-													<Grid item xs={12} sm={6}>
-														<DatePicker
-															id="checkout-date"
-															label="Check-out date"
-															selected={endDate}
-															onChange={(e) => {
-																endDateChange(e);
-															}}
-															placeholderText="Check-Out"
-															className="form-control"
-															minDate={today}
-														/>
-													</Grid>
-												</Grid>
-												<br />
-												<InputLabel id="guests-label">Guests</InputLabel>
-												<Select
-													labelId="guests-label"
-													id="guests"
-													variant="filled"
-													fullWidth
-													style={{ marginTop: 16 }}
-												>
-													<MenuItem value={1}>1</MenuItem>
-													<MenuItem value={2}>2</MenuItem>
-													<MenuItem value={3}>3</MenuItem>
-													<MenuItem value={4}>4</MenuItem>
-													<MenuItem value={5}>5</MenuItem>
-													<MenuItem value={6}>6</MenuItem>
-												</Select>
+											</li>
+										)}
 
-												<Grid
-													container
-													style={{ marginTop: "2%", alignItems: "center" }}
-													alignContent="flex-start"
-												>
-													<Grid
-														item
-														alignItems="center"
-														justifyContent="center"
-														xs={12}
-													>
-														<Typography>
-															Price Per Night : ${property.cost.per_night}
-														</Typography>
-													</Grid>
-													<Grid
-														item
-														alignItems="center"
-														justifyContent="center"
-														xs={12}
-													>
-														<Typography>
-															Cleaning Fee : ${property.cost.cleaning_fee}
-														</Typography>
-													</Grid>
-													<Grid
-														item
-														alignItems="center"
-														justifyContent="center"
-														xs={12}
-													>
-														<Typography>
-															Deposit Amount : ${property.cost.deposit}
-														</Typography>
-														<br />
-													</Grid>
+										{property.amenities.garden && (
+											<li>
+												<Typography variant="body2" gutterBottom>
+													Garden
+												</Typography>
+											</li>
+										)}
 
-													<Grid
-														item
-														alignItems="center"
-														justifyContent="center"
-														xs={12}
-													>
-														<Divider
-															variant="fullWidth"
-															style={{ height: 2, backgroundColor: "darkgrey" }}
-														/>
-														<Typography variant="h5">
-															Total : $
-															{property.cost.per_night +
-																property.cost.cleaning_fee +
-																property.cost.deposit}
-														</Typography>
-													</Grid>
-													{/* <Grid item> */}
-												</Grid>
-												{/* </Grid> */}
+										{property.amenities.television && (
+											<li>
+												<Typography variant="body2" gutterBottom>
+													Television
+												</Typography>
+											</li>
+										)}
+									</ul>
+								</CardContent>
+							</Card>
+						</Grid>
 
-												<Button
-													style={{ marginTop: "3%" }}
-													variant="contained"
-													color="primary"
-													size="large"
-													onClick={reserve}
-													fullWidth
-												>
-													Book Now
-												</Button>
-											</CardContent>
-										</Card>
+						<Grid item xs={12} sm={6}>
+							<Card>
+								<CardContent>
+									<Typography
+										gutterBottom
+										variant="h5"
+										component="h2"
+										style={{ justifyContent: "center" }}
+									>
+										Book your stay
+									</Typography>
+									<Grid container spacing={2}>
+										<Grid item xs={12} sm={6}>
+											<DatePicker
+												id="checkin-date"
+												label="Check-in date"
+												selected={startDate}
+												onChange={(e) => {
+													setStartDate(e);
+												}}
+												placeholderText="Check-IN"
+												className="form-control"
+												minDate={today}
+											/>
+										</Grid>
+										<Grid item xs={12} sm={6}>
+											<DatePicker
+												id="checkout-date"
+												label="Check-out date"
+												selected={endDate}
+												onChange={(e) => {
+													endDateChange(e);
+												}}
+												placeholderText="Check-Out"
+												className="form-control"
+												minDate={today}
+											/>
+										</Grid>
 									</Grid>
-								</Grid>
-							</Grid>
+									<br />
+									<InputLabel id="guests-label">Guests</InputLabel>
+									<Select
+										labelId="guests-label"
+										id="guests"
+										variant="filled"
+										fullWidth
+										style={{ marginTop: 16 }}
+									>
+										<MenuItem value={1}>1</MenuItem>
+										<MenuItem value={2}>2</MenuItem>
+										<MenuItem value={3}>3</MenuItem>
+										<MenuItem value={4}>4</MenuItem>
+										<MenuItem value={5}>5</MenuItem>
+										<MenuItem value={6}>6</MenuItem>
+									</Select>
+
+									<Grid
+										container
+										style={{ marginTop: "2%", alignItems: "center" }}
+										alignContent="flex-start"
+									>
+										<Grid
+											item
+											alignItems="center"
+											justifyContent="center"
+											xs={12}
+										>
+											<Typography>
+												Price Per Night : ${property.cost.per_night}
+											</Typography>
+										</Grid>
+										<Grid
+											item
+											alignItems="center"
+											justifyContent="center"
+											xs={12}
+										>
+											<Typography>
+												Cleaning Fee : ${property.cost.cleaning_fee}
+											</Typography>
+										</Grid>
+										<Grid
+											item
+											alignItems="center"
+											justifyContent="center"
+											xs={12}
+										>
+											<Typography>
+												Deposit Amount : ${property.cost.deposit}
+											</Typography>
+											<br />
+										</Grid>
+
+										<Grid
+											item
+											alignItems="center"
+											justifyContent="center"
+											xs={12}
+										>
+											<Divider
+												variant="fullWidth"
+												style={{ height: 2, backgroundColor: "darkgrey" }}
+											/>
+											<Typography variant="h5">
+												Total : $
+												{property.cost.per_night +
+													property.cost.cleaning_fee +
+													property.cost.deposit}
+											</Typography>
+										</Grid>
+										{/* <Grid item> */}
+									</Grid>
+									{/* </Grid> */}
+
+									<Button
+										style={{ marginTop: "3%" }}
+										variant="contained"
+										color="primary"
+										size="large"
+										onClick={reserve}
+										fullWidth
+									>
+										Book Now
+									</Button>
+								</CardContent>
+							</Card>
 						</Grid>
 					</Grid>
 				</Grid>
 
+
 				{/* Review Grid */}
-				<Grid item xs={12} sm={12} style={{ margin: "2%" }}>
+				< Grid item xs={12} sm={12} style={{ margin: "2%" }
+				}>
 					<Card style={{ padding: "3%" }}>
 						<Typography variant="h6">
 							What Other Guests Have To Say
@@ -456,8 +448,7 @@ function ListingDetails() {
 									<DialogTitle>Add Review</DialogTitle>
 									<DialogContent>
 										<Typography variant="body1">
-											{" "}
-											Posting as Abhirup Bhattacharya
+											Posting as {first_name} {last_name}
 										</Typography>
 										<TextField
 											margin="dense"
@@ -546,8 +537,8 @@ function ListingDetails() {
 							)}
 						</List>
 					</Card>
-				</Grid>
-			</Container>
+				</Grid >
+			</Container >
 		);
 	}
 }

@@ -93,7 +93,6 @@ router.put("/:id", function (req, res) {
       return err;
     } else {
       user_data.is_host = true;
-
       user_data.save((err) => {
         if (err) {
           res.send(err);
