@@ -46,7 +46,6 @@ function Dashboard() {
     const [tab, setTab] = React.useState(0);
     const navigate = useNavigate();
 
-    const navigate = useNavigate()
     const handleChange = (event, newValue) => {
         setTab(newValue);
     };
@@ -257,6 +256,7 @@ function Dashboard() {
                                     variant="contained"
                                     color="secondary"
                                     style={{ float: "right" }}
+                                    onClick={pickWishlist}
                                 >
                                     View Wishlist
                                 </Button>

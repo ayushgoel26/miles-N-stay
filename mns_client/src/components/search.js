@@ -94,28 +94,6 @@ function Search() {
             </Form.Select>
           </Form.Group>
         </Row>
-        <Row className="py-2 px-2">
-          <Form.Group className="col-md-6">
-            <Form.Control
-              value={startDate ? startDate.toISOString().substring(0, 10) : ""}
-              type="date"
-              name="startDate"
-              min={new Date()}
-              onChange={(e) => setStartDate(new Date(e.target.value))}
-            />
-          </Form.Group>
-          <Form.Group className="col-md-6">
-            <Form.Control
-              value={endDate ? endDate.toISOString().substring(0, 10) : ""}
-              type="date"
-              name="endDate"
-              min={
-                startDate ? startDate.getDate() + 1 : new Date().getDate() + 1
-              }
-              onChange={(e) => setEndDate(new Date(e.target.value))}
-            />
-          </Form.Group>
-        </Row>
         <Row className="pb-2 px-2">
           <Form.Group>
             <Button variant="primary" id="card-search" type="submit">
@@ -123,15 +101,13 @@ function Search() {
             </Button>
           </Form.Group>
         </Row>
-        <Row className="pb-2 px-2">
-          <Form.Group>
-            <p className="text-muted">
-              {" "}
-              <b>
-                Not sure where to go? <a onClick={fetchData}>Browse here!</a>
-              </b>
-            </p>
-          </Form.Group>
+        <Row className="pb-2 px-2 text-center">
+          <p className="text-muted">
+            {" "}
+            <b>
+              Not sure where to go? <a onClick={fetchData} style={{ color: "blue" }}>Browse here!</a>
+            </b>
+          </p>
         </Row>
       </Form>
     </Card>

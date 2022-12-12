@@ -40,7 +40,7 @@ function NavbarHome() {
 
   return (
     <Navbar className="row fix-top" bg="light" expand="md" id="navbarmenu">
-      <Col sm="1" className="logo-div">
+      <Col sm="2" className="logo-div">
         <Navbar.Brand>
           <Link to="/">
             <img
@@ -52,7 +52,7 @@ function NavbarHome() {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
       </Col>
-      <Col sm="10">{!(location === "/") && <SearchBar />}</Col>
+      <Col sm="9">{!(location === "/") && <SearchBar />}</Col>
       <Navbar.Collapse
         className="col-sm-1 justify-content-end"
         id="basic-navbar-nav"

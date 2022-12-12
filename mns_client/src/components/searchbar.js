@@ -1,69 +1,49 @@
-import { Col, Row, Form } from "react-bootstrap";
+import { Col, Row, Form, InputGroup } from "react-bootstrap";
 import "./searchbar.css";
 import { BsSearch } from "react-icons/bs";
+import Button from "react-bootstrap/Button";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function SearchBar() {
+  const [city, setCity] = useState();
+  const navigate = useNavigate();
+  const searchUsingCity = async (e) => {
+    console.log("in here")
+    e.preventDefault();
+    try {
+      let api_url = `http://localhost:3000/listings/?city=${city}`;
+      let listings = await fetch(api_url);
+      let data = await listings.json();
+      navigate("/allProperties", {
+        state: {
+          data,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
   return (
-    <Form className="search">
-      <Row className="px-5">
-        <Col md="5" className="search-inputs">
-          <label htmlFor="location">
-            <div className="label">Location</div>
-            <input
-              type="text"
-              name="location"
-              id="ip1"
-              placeholder="Where are you going?"
+    <Row >
+      <Form className="search" onSubmit={searchUsingCity}>
+        <Col md="3"></Col>
+        <Col md="6" className="search-inputs">
+          <InputGroup className="mb-3">
+            <Form.Control
+              placeholder="Add City"
+              aria-label="Add City"
+              aria-describedby="basic-addon2"
+              onChange={(e) => setCity(e.target.value)}
             />
-          </label>
+            <Button variant="outline-secondary" id="button-addon2" type="submit">
+              Search using Place
+            </Button>
+          </InputGroup>
         </Col>
-        <Col md="2" className="search-inputs">
-          <label htmlFor="check-in">
-            <div className="label">Check in</div>
-            <input type="date" id="startDate" />
-          </label>
-        </Col>
-        <Col md="2" className="search-inputs">
-          <label htmlFor="check-out">
-            <div className="label">Check out</div>
-            <input type="date" id="endDate" />
-          </label>
-        </Col>
-        <Col md="2" className="search-inputs">
-          <label htmlFor="guests">
-            <div className="label">Guests</div>
-            <div className="selectWrapper">
-              <select className="selectBox" id="guest-count">
-                <option>1 adult</option>
-                <option>2 adults</option>
-                <option>3 adults</option>
-                <option>4 adults</option>
-                <option>5 adults</option>
-                <option>6 adults</option>
-                <option>7 adults</option>
-                <option>8 adults</option>
-                <option>9 adults</option>
-                <option>10 adults</option>
-                <option>11 adults</option>
-                <option>12 adults</option>
-                <option>13 adults</option>
-                <option>14 adults</option>
-                <option>15 adults</option>
-                <option>16 adults</option>
-              </select>
-            </div>
-          </label>
-        </Col>
-        <Col
-          md="1"
-          className="search-button orange d-flex flex-wrap align-items-center"
-        >
-          <button>
-            <BsSearch />
-          </button>
-        </Col>
-      </Row>
-    </Form>
+        <Col md="3"></Col>
+      </Form>
+    </Row>
   );
 }
 

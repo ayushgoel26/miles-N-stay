@@ -5,7 +5,7 @@
 
 .search .label {
 	display: table-footer-group;
-	font-size: 1rem;
+	font-size: 1.5rem;
 	color: #111111;
 	font-weight: bold;
 }
@@ -16,15 +16,6 @@
 
 .search-inputs:nth-child(1) {
 	flex: 1.5 0 0%;
-}
-
-.search-inputs:nth-child(2),
-.search-inputs:nth-child(3) {
-	flex: 1 0 0%;
-}
-
-.search-inputs:nth-child(4) {
-	flex: 0.85 0 0%;
 }
 
 .search-inputs input {
@@ -46,11 +37,9 @@
 
 .search-button button {
 	font-size: 16px;
-	width: 48px;
-	height: 48px;
 	border-radius: 30px;
 	border: none;
 	background-color: #f58b5d;
 	color: #fff;
-	margin-top: 12%;
+	margin-top: 6%;
 }
