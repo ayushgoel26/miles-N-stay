@@ -120,15 +120,12 @@ router.delete('/:id', (req, res) => {
 });
 
 
-router.get('/upcoming/:id', (req, res) => {
-    const { id } = req.params
+router.get('/upcoming/:type/:id', (req, res) => {
+    const { type, id } = req.params
+    const query = (type === "host") ? { "host_id": id, "start_date": { "$gt": currDate } } : { "guest_id": id, "start_date": { "$gt": currDate } }
+
     Reservations.find(
-        {
-            "host_id": id,
-            "start_date": {
-                "$gt": currDate
-            }
-        },
+        query,
         (err, reservations) => {
             if (err) {
                 console.log(err);
@@ -140,15 +137,13 @@ router.get('/upcoming/:id', (req, res) => {
     );
 });
 
-router.get('/past/:id', (req, res) => {
-    const { id } = req.params
+router.get('/past/:type/:id', (req, res) => {
+    const { type, id } = req.params
+
+    const query = (type === "host") ? { "host_id": id, "end_date": { "$lt": currDate } } : { "guest_id": id, "end_date": { "$lt": currDate } }
+    console.log(query)
     Reservations.find(
-        {
-            "host_id": id,
-            "end_date": {
-                "$lt": currDate
-            }
-        },
+        query,
         (err, reservations) => {
             if (err) {
                 console.log(err);
@@ -160,18 +155,12 @@ router.get('/past/:id', (req, res) => {
     );
 });
 
-router.get('/current/:id', (req, res) => {
-    const { id } = req.params
+router.get('/current/:type/:id', (req, res) => {
+    const { type, id } = req.params
+
+    const query = (type === "host") ? { "host_id": id, "start_date": { "$lte": currDate }, "end_date": { "$gte": currDate } } : { "guest_id": id, "start_date": { "$lte": currDate }, "end_date": { "$gte": currDate } }
     Reservations.find(
-        {
-            "host_id": id,
-            "start_date": {
-                "$lte": currDate
-            },
-            "end_date": {
-                "$gte": currDate
-            }
-        },
+        query,
         (err, reservations) => {
             if (err) {
                 console.log(err);

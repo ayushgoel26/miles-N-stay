@@ -52,7 +52,7 @@ function Reservations(props) {
                             {reservations.map((reservation) => (
                                 <li key={reservation._id}>
                                     <Grid container>
-                                        <Grid item>
+                                        <Grid item style={{ paddingRight: "3%" }}>
                                             <img src='img/home.jpg' style={{ height: "100px", width: "100px" }} />
                                         </Grid>
                                         <Grid item>
@@ -65,7 +65,7 @@ function Reservations(props) {
                                             </Typography>
                                         </Grid>
                                         {props.tab === "1" &&
-                                            <Grid item>
+                                            <Grid item style={{ paddingLeft: "20%", float: "right" }}>
                                                 <BsFillTrashFill color="red" onClick={(e) => { deleteReservation(reservation) }} />
                                             </Grid>
                                         }

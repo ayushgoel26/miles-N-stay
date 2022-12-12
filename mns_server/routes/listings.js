@@ -84,7 +84,7 @@ router.get("/", function (req, res) {
 });
 
 router.get("/:id", function (req, res) {
-  console.log(req.query);
+
   const { id } = req.params;
   Listings.findById(id, (err, listing) => {
     if (err) {
@@ -97,8 +97,7 @@ router.get("/:id", function (req, res) {
 });
 
 router.post("/reviews", (req, res) => {
-  console.log("inside review post");
-  console.log(req.body);
+
   Reviews.create(req.body, (err, reviews) => {
     if (err) {
       console.log(err);
@@ -110,9 +109,9 @@ router.post("/reviews", (req, res) => {
 });
 
 router.get("/reviews/:id", function (req, res) {
-  console.log(req.query);
+
   const { id } = req.params;
-  console.log(id);
+
 
   Reviews.find({ property_id: id }, (err, reviews) => {
     if (err) {
@@ -126,7 +125,7 @@ router.get("/reviews/:id", function (req, res) {
 
 router.post("/save-image", (req, res) => {
   multi_upload(req, res, function (err) {
-    console.log(req.files);
+
     var response = [];
     if (req.files.length > 0) {
       for (var i = 0; i < req.files.length; i++) {
@@ -134,7 +133,7 @@ router.post("/save-image", (req, res) => {
       }
     }
     if (err instanceof multer.MulterError) {
-      console.log(err);
+
       res
         .status(500)
         .send({
@@ -161,24 +160,55 @@ router.post("/save-image", (req, res) => {
   });
 });
 
-// update property
-router.put("/:id", function (req, res) {
-  Listings.findById(req.params.id, (err, listing) => {
+router.get("/host/:id", function (req, res) {
+
+
+  const { id } = req.params;
+  Listings.find({ host_id: id, is_deleted: false }, (err, listings) => {
     if (err) {
       console.log(err);
+    } else {
+      res.json(listings);
+    }
+    return;
+  });
+});
+
+
+router.put("/delete/:id", function (req, res) {
+
+  Listings.findById(req.params.id, (err, listing_data) => {
+    if (err) {
+
       return err;
     } else {
-      listing = req.body;
-      listing.save((err) => {
+      listing_data.is_deleted = true;
+
+      listing_data.save((err) => {
         if (err) {
           res.send(err);
         } else {
-          res.send('Listing updated successfully');
+          res.send('Listing Deleted successfully');
         }
       });
 
     }
   });
 });
+
+// update property
+router.put("/:id", function (req, res) {
+
+
+  var query = { '_id': req.params.id };
+  req.newData = req.body;
+  Listings.findOneAndUpdate(query, req.newData, { upsert: true }, function (err, doc) {
+    if (err) return res.send(500, { error: err });
+    return res.send('Succesfully saved!');
+  });
+});
+
+
+
 
 module.exports = router;
