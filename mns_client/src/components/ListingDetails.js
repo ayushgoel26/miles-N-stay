@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ReactSession } from "react-client-session";
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import { Rating } from '@material-ui/lab';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 import {
 	Container,
@@ -21,19 +27,22 @@ import {
 	DialogActions
 } from '@material-ui/core'
 
-import StarIcon from '@material-ui/icons/Star';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import { Rating } from '@material-ui/lab';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-
 function ListingDetails() {
+	const navigate = useNavigate();
+	const user_id = ReactSession.get('user_id');
+	const is_ui_host = ReactSession.get('is_ui_host');
+
 	const [property, setProperty] = useState(null);
 	const [startDate, setStartDate] = useState(new Date());
 	const [endDate, setEndDate] = useState(new Date());
 	const location = useLocation();
 	const listing_id = location.state.from;
-	const navigate = useNavigate();
+	const [reviewData, setReviewData] = useState(initial_review)
+	const [reviews, setReviews] = useState(null)
+	const [wishlist, setWishList] = useState(null)
+	const [isFavorited, setIsFavorited] = useState(false);
+	const [wishFetched, setWishFetched] = useState(false)
+	const [open, setOpen] = React.useState(false);
 
 	const startDateChange = (e) => {
 		console.log(`${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate() + 1}`)
@@ -90,59 +99,42 @@ function ListingDetails() {
 		comment: "",
 	};
 
-	const [reviewData, setReviewData] = useState(initial_review)
-	const [reviews, setReviews] = useState(null)
-	const [wishlist, setWishList] = useState(null)
-	const [isFavorited, setIsFavorited] = useState(false);
-	const [wishFetched, setWishFetched] = useState(false)
-
 	useEffect(() => {
 		const dataFetch = async () => {
 			const data = await (
-				await fetch("http://localhost:3000/listings/" + listing_id)
+				await fetch(`http://localhost:3000/listings/${listing_id}`)
 			).json();
-			console.log(data);
 			setProperty(data);
 		};
 
 		dataFetch();
 	}, []);
 
-
 	useEffect(() => {
-		// Fetch data from the API
-		fetch('http://localhost:3000/wishlist?prop_id=' + listing_id + '&guest_id=123')
-		fetch('http://localhost:3000/wishlist?prop_id=6393d4817fcee3470f65b6f4&guest_id=123')
+		fetch(`http://localhost:3000/wishlist?prop_id=${listing_id}&guest_id=${user_id}`)
 			.then((response) => response.json())
 			.then((json) => {
 				setWishFetched(true)
 				if (json) {
-					//isFavorited = true
 					setIsFavorited(true)
 					console.log("inside useeffect json")
 					setWishList(json)
 				} else {
-					//isFavorited = false
 					setIsFavorited(false)
 					setWishList(json)
 				}
 			});
 	}, []);
 
-
-
 	useEffect(() => {
 		const reviewFetch = async () => {
 			const data = await (
-				await fetch("http://localhost:3000/listings/reviews/" + listing_id)
-			).json();
-			console.log(data);
+				await fetch(`http://localhost:3000/listings/reviews/${listing_id}`).json()
+			)
 			setReviews(data);
 		};
 		reviewFetch();
 	}, []);
-
-	const [open, setOpen] = React.useState(false);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -193,13 +185,11 @@ function ListingDetails() {
 		}
 
 		else {
-			fetch("http://localhost:3000/wishlist/delete?prop_id=" + listing_id + "&guest_id=123")
+			fetch(`http://localhost:3000/wishlist/delete?prop_id=${listing_id}&guest_id=${user_id}`)
 				.then((response) => response.json())
 				.then((data) => console.log(data))
 				.catch((error) => console.log(error));
 		}
-
-
 	};
 
 	if (property && reviews) {
@@ -239,7 +229,6 @@ function ListingDetails() {
 					<Typography variant="h5">
 						{property.property_type} hosted by {property.host_name}
 					</Typography>
-
 					<Grid container xs={12} sm={12} spacing={2}>
 						<Grid item xs={12} sm={6}>
 							<Card style={{ padding: "3%", marginBottom: "3%" }}>
