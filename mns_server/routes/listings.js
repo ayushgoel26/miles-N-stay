@@ -43,16 +43,6 @@ router.post("/", (req, res) => {
   });
 });
 
-mongoose.connect(mongoDB).then(
-  (dbo) => {
-    console.log("DB connected");
-  },
-  (err) => {
-    console.log("Unable to connect to DB");
-    console.error(err);
-  }
-);
-
 router.get("/", function (req, res) {
   const Listings = mongoose.model("properties", ListingSchema);
   if (req.query.city === undefined) {

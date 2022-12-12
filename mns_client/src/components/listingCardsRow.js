@@ -7,7 +7,7 @@ const ListingsCardsRow = (props) => {
     <Row md={2} lg={4} sm={1} key={props.keys} className="mx-2 my-2">
       {props.cards.map((d) => (
         <Col key={d.id} className="mb-3">
-          <Card className='listingsCard'>
+          <Card className="listingsCard">
             <Link to={`/listingDetails`} state={{ from: d._id }}>
               <Card.Img
                 className="rounded"
@@ -21,9 +21,9 @@ const ListingsCardsRow = (props) => {
             <Card.Body>
               <Card.Title>{d.property_name}</Card.Title>
               <Card.Text>
-                <i>{d.cost.per_night}/night</i>
+                <i>${d.cost.per_night}/night</i>
                 <br />
-                {d.summary}...
+                {d.summary.substring(0, 75)}...
               </Card.Text>
             </Card.Body>
           </Card>
